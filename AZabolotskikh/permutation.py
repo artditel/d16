@@ -25,15 +25,12 @@ class Premutation:
 	def __ne__(self,other):
 		return not (self == other)
 	def __pow__(self, i):
-		this = self
-		while i!=0:
-			if i % 2 == 0:
-				this *= this
-				i /= 2
-			else:
-				this *= self
-				i-=1
-		return this 
+		if i == 1:
+                        return self
+                if i%2==0:
+                        return (self*self)**(i/2)
+                else:
+                        return self*((self*self)**((i-1)/2))
 	def parity(self):
 		a = 0
 		for j in range(len(self._)):
@@ -41,8 +38,18 @@ class Premutation:
 				if self._[i] > self._[j]:
 					a += 1
 		return a%2==0
+        def _is_id(self):
+                return self._ == [i for i in range(len(self._))]
 	def commutes(self, other):
-		return self*other == other*self 
+		return self*other == other*self
+        def order(self):
+                this = self;
+                i = 1
+                while 1:
+                        if this._is_id():
+                                return i;
+                        i += 1
+                        this *=self
 
 def main():
 	a1 = Premutation([4,5,1,3,2])
@@ -60,6 +67,8 @@ def main():
 	print(a1==a2)
 	print ("commutes")
 	print(a1.commutes(a2))
+        print("order")
+        #print(a1.order(), a2.order())
 	print ("pow 10kkk")
 	print(a1 ** (10**10), a2 ** (10**10))
 
