@@ -33,3 +33,21 @@ class Permutation:
 a1=Permutation([4,5,1,3,2])
 a2=Permutation([2,3,4,5,1])
 print(a1**-1)
+
+def pr(a1):
+        d = [1]
+        for r in range(len(a1 - 1)):
+                d.append(r + 2)
+
+        k = 0
+        l = 0
+        g = a1
+
+        while l == 0:
+                print(g)
+                if g.A == d:
+                        l = 1
+                k = k + 1
+                g = g*a1
+        print(k)
+        return k
