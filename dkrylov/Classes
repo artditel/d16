@@ -1,0 +1,14 @@
+class Poet:
+	Is_alive = True 
+	def Died_in_a_duel(self):
+		self.Is_alive = False
+class Scrapper:
+	Is_a_killer = False
+
+def Fight_a_duel(scrapper, poet):
+	scrapper.Is_a_killer = True
+	poet.Died_in_a_duel()
+Martynov, Dantes, Lermontov, Pushkin = Scrapper(), Scrapper(), Poet(), Poet()	
+Fight_a_duel(Dantes, Pushkin)
+Fight_a_duel(Martynov, Lermontov)
+print(Martynov.Is_a_killer, Lermontov.Is_alive, Dantes.Is_a_killer, Pushkin.Is_alive)
