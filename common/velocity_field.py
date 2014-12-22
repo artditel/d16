@@ -75,17 +75,33 @@ class Drawer:
                 end = start + velocity_function(start) * SCALE
                 self.draw_arc(self.change_coordinates(start), self.change_coordinates(end))
 
-    def draw_circle(self, normed_vec):
-        vec = self.change_coordinates(normed_vec)
-        ids = [self.canvas.create_oval(vec.x - RADIUS, vec.y - RADIUS, vec.x + RADIUS, vec.y + RADIUS)]
+
+    def draw_snowflake(self, normed_vec):
+        def draw_snowflake_part(ids, start, angle, length, recursion_depth):
+            diff = Vector(length*math.cos(angle), length*math.sin(angle))
+            end = start + diff
+            ids.append(self.canvas.create_line(start.x, start.y, end.x, end.y))
+            if recursion_depth > 0:
+                for i in (-1, 1):
+                    new_angle = angle + math.pi * i / 3
+                    draw_snowflake_part(ids, start + diff * 0.5, new_angle, length * 0.4, recursion_depth - 1)
+                    draw_snowflake_part(ids, start + diff * 0.75, new_angle, length * 0.2, recursion_depth - 1)
+
+        start = self.change_coordinates(normed_vec)
+        ids = []
+        for i in range(6):
+            angle = math.pi * i / 3
+            draw_snowflake_part(ids, start, angle, RADIUS, 2)
         return ids
 
     def redraw(self, state):
         canvas.delete(*self.objects_to_delete)
         self.objects_to_delete = []
 
-        circ_id = self.draw_circle(state.pos)
+        circ_id = self.draw_snowflake(state.pos)
         self.objects_to_delete += circ_id
+
+
 
 class Game:
     def __init__(self, canvas):
