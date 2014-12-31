@@ -2,13 +2,14 @@ import tkinter
 import math
 import random
 
-FPS = 24 #frames per second, i.e. how many step do you have in one second
-STEPS_PER_SECOND = 500 #how many steps do you have in one second
-WIDTH = 500
-HEIGHT = 500
-RADIUS = 20
-PARTS = 20
+FPS = 50 #frames per second, i.e. how many step do you have in one second
+STEPS_PER_SECOND = 1000 #how many steps do you have in one second
+WIDTH = 1000
+HEIGHT = 600
+RADIUS = 10
+PARTS = 50
 SCALE = 0.1
+SNOWFLAKES_COUNT = 30
 
 class Vector:
     #https://github.com/artditel/d16/blob/master/tbaikabulov/Vector3.py
@@ -44,7 +45,9 @@ class State:
         self.pos += self.velocity_function(self.pos) * time_interval
         if abs(self.pos.x) > 1 or abs(self.pos.y) > 1:
             #ball outside the field
-            self.start_random()
+            # self.start_random()
+            self.pos.x = (self.pos.x + 1) % 2 - 1
+            self.pos.y = (self.pos.y + 1) % 2 - 1
 
 class Drawer:
     def __init__(self, canvas, width=WIDTH, height=HEIGHT):
@@ -62,7 +65,7 @@ class Drawer:
         self.draw_line(to_xy, from_xy + diff*0.75 - perpendicular*0.25)
 
     def draw_line(self, vec1, vec2):
-        self.canvas.create_line(vec1.x, vec1.y, vec2.x, vec2.y, fill="green")
+        self.canvas.create_line(vec1.x, vec1.y, vec2.x, vec2.y, fill="grey")
 
     def change_coordinates(self, normed_vec):
         center = Vector(self.width/2, self.height/2)
@@ -80,7 +83,7 @@ class Drawer:
         def draw_snowflake_part(ids, start, angle, length, recursion_depth):
             diff = Vector(length*math.cos(angle), length*math.sin(angle))
             end = start + diff
-            ids.append(self.canvas.create_line(start.x, start.y, end.x, end.y))
+            ids.append(self.canvas.create_line(start.x, start.y, end.x, end.y, fill="red"))
             if recursion_depth > 0:
                 for i in (-1, 1):
                     new_angle = angle + math.pi * i / 3
@@ -91,32 +94,122 @@ class Drawer:
         ids = []
         for i in range(6):
             angle = math.pi * i / 3
-            draw_snowflake_part(ids, start, angle, RADIUS, 2)
+            draw_snowflake_part(ids, start, angle, RADIUS, 1)
         return ids
 
-    def redraw(self, state):
-        canvas.delete(*self.objects_to_delete)
-        self.objects_to_delete = []
-
+    def draw(self, state):
         circ_id = self.draw_snowflake(state.pos)
         self.objects_to_delete += circ_id
 
+    def rm_old(self):
+        self.canvas.delete(*self.objects_to_delete)
+        self.objects_to_delete = []
 
+    def rm_all(self):
+        self.canvas.delete(*self.canvas.find_all())
+
+class RandomFunction:
+    def __init__(self):
+        self.reinit()
+
+    def reinit(self):
+        self.coefs = [random.uniform(-1, 1) for i in range(10)]
+
+    def __call__(self, x, y):
+        f_x = self.coefs[0] * x + self.coefs[2] * y + self.coefs[4] + self.coefs[6]*x*y
+        f_y = self.coefs[1] * x + self.coefs[3] * y + self.coefs[5] + self.coefs[7]*x*y
+        return f_x, f_y
+
+class FixedFunctions:
+    def __init__(self):
+        self.index = 0
+
+        def f1(x,y):
+            return -math.sin(3 * y), math.cos(3 * x)
+        def f2(x,y):
+            def f(x):
+                return 3*(x**3 - 0.5*x)
+            return f(y), f(x)
+        def f3(x,y):
+            def f(x):
+                return 3*(x**3 - 0.5*x)
+            return -f(y), f(x)
+
+        f4 = lambda x,y: (y, x)
+        f5 = lambda x,y: (-y, x)
+
+        self.functions = [f1, f2, f3, f4, f5]
+
+    def __call__(self, x, y):
+        return self.functions[self.index % len(self.functions)](x,y)
+
+    def reinit(self):
+        self.index += 1
+
+class FunctionFactory:
+    def __init__(self):
+        self.functions = [RandomFunction(), FixedFunctions()]
+        self.func_ind = 0
+
+    def get_function(self):
+        return self.functions[self.func_ind % len(self.functions)]
+
+    def change_function_class(self):
+        self.func_ind += 1
+
+    def change_function_type(self):
+        self.get_function().reinit()
 
 class Game:
     def __init__(self, canvas):
-        def velocity_function(vec):
-            f_x = -math.sin(3 * vec.y)
-            f_y = math.cos(3 * vec.x)
-            return Vector(f_x, f_y)
+        self.function_factory = FunctionFactory()
+        self.init(canvas)
+
+        def change_function_class(event):
+            self.function_factory.change_function_class()
+            self.on_function_change(event.widget)
+
+        def change_function_type(event):
+            self.function_factory.change_function_type()
+            self.on_function_change(event.widget)
+
+        def key_press(event):
+            global SNOWFLAKES_COUNT
+            if event.keysym == "plus":
+                SNOWFLAKES_COUNT += 1
+            if event.keysym == "minus":
+                SNOWFLAKES_COUNT -= 1
+            print ("Set %d snowflakes count" % SNOWFLAKES_COUNT)
+            self.on_function_change(event.widget)
+
+        canvas.focus_set()
+        canvas.bind("<Key>", key_press)
+        canvas.bind("<Button-1>", change_function_type)
+        canvas.bind("<Button-3>", change_function_class)
+
+    def init(self, canvas):
+        velocity_function = self.get_function()
         self.canvas = canvas
-        self.state = State(velocity_function)
+        self.states = [State(velocity_function) for x in range(SNOWFLAKES_COUNT)]
         self.drawer = Drawer(canvas)
         self.drawer.draw_arcs(velocity_function)
 
+    def get_function(self):
+        func = self.function_factory.get_function()
+        def to_vec(pair):
+            return Vector(pair[0], pair[1])
+        return lambda vec: to_vec(func(math.sin(math.pi * vec.x), math.sin(math.pi * vec.y)))
+
+    def on_function_change(self, canvas):
+        self.drawer.rm_all()
+        self.init(canvas)
+
     def loop(self):
-        self.state.make_step(1 / (STEPS_PER_SECOND /  FPS))
-        self.drawer.redraw(self.state)
+        self.drawer.rm_old()
+        for state in self.states:
+            for i in range(int(STEPS_PER_SECOND / FPS)):
+                state.make_step(1 / (STEPS_PER_SECOND))
+            self.drawer.draw(state)
         self.canvas.after(1000 // FPS, self.loop)
 
 
