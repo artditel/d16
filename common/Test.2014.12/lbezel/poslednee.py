@@ -1,4 +1,11 @@
-list = open("a.txt", "r")
+A = True
+while A == True:
+	try:
+		r = input()
+		list = open(r, "r")
+		A = False
+	except:
+		print("Enter filename again")
 end = []
 for line in list:
 	line = line.strip()
@@ -7,4 +14,7 @@ for line in list:
 
 b = len(end)
 end = sorted(end)
-print(end[b - 1], end[b - 2],  end[b - 3], end[b - 4], end[b - 5], end[b - 6], end[b - 7], end[b - 8], end[b - 9], end[b - 10],)
+try:
+	print(end[b - 1], end[b - 2],  end[b - 3], end[b - 4], end[b - 5], end[b - 6], end[b - 7], end[b - 8], end[b - 9], end[b - 10])
+except: 
+	print("Takih elementov ne sushestvuet")
