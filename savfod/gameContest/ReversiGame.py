@@ -6,6 +6,10 @@ EMPTY_PLAYER_INDEX = -1
 PLAYER_COUNT = 2
 
 #moves = (i,j) pairs
+def argmax(ar):
+    if len(ar) == 0:
+        return -1
+    return sorted(enumerate(ar), key=lambda pair:pair[1], reverse=True)[0][0]
 
 class ReversiGame(Game):
     def __calculate_possible_moves(self):
@@ -42,6 +46,28 @@ class ReversiGame(Game):
 
     def finished(self):
         return len(self.get_possible_moves()) == 0
+
+    def not_finished(self):
+        return not self.finished()
+
+    def get_winner(self):
+        assert(self.finished)
+
+        players_points = [0] * PLAYER_COUNT
+        for i in range(self.field_size):
+            for j in range(self.field_size):
+                player = self.position.get_cell( (i,j) )
+                if player != EMPTY_PLAYER_INDEX:
+                    players_points[player] += 1
+
+        return argmax(players_points)
+
+    def make_copy(self):
+        copy = ReversiGame(field_size = self.field_size)
+        copy.position = self.position
+        copy.possible_moves = self.possible_moves
+        copy.cur_player = self.cur_player
+        return copy
 
 
 class ReversiPosition(Position):
