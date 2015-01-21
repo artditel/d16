@@ -19,7 +19,7 @@ class Random:
     def get_name(self):
         return "Random"
 
-class Xor:
+class Unforgiving:
     def cooperate(self,history):
         other_player_moves = (j for (i,j) in history)
         if False in other_player_moves:
@@ -27,5 +27,5 @@ class Xor:
         else:
             return True
     def get_name(self):
-        return "Xor"
+        return "Unforgiving"
 

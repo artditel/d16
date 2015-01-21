@@ -8,7 +8,7 @@ def get_players():
         baseline.Angry,
         baseline.Kind,
         baseline.Random,
-        baseline.Xor
+        baseline.Unforgiving,
     ]
 
     return players
