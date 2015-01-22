@@ -36,7 +36,7 @@ def play(player1, player2):
         players_wins[0] += win1
         players_wins[1] += win2
 
-    print("Game finished. Log:" + str(history))
+    print("Game finished. {}:{}. Log:".format(players_wins[0], players_wins[1]) + str(history))
     print()
     return players_wins
 
