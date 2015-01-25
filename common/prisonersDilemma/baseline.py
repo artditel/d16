@@ -11,12 +11,3 @@ def Random(my_moves, enemy_moves):
 
 def Unforgiving(my_moves, enemy_moves):
     return False not in enemy_moves
-
-def Confused(self, my_moves, enemy_moves):
-        history = list(zip(my_moves, enemy_moves))
-        other_player_moves = (history[:-1])
-        if other_player_moves == True:
-            return True
-        else:
-            return False
-

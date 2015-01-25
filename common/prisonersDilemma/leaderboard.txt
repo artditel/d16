@@ -1,4 +1,5 @@
 1. Angry with result 616
-2. Unforgiving with result 498
-3. Kind with result 284
-4. Random with result 255
+2. Confused with result 588
+3. Unforgiving with result 497
+4. Random with result 209
+5. Kind with result 184
