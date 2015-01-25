@@ -28,4 +28,13 @@ class Unforgiving:
             return True
     def get_name(self):
         return "Unforgiving"
+class Confused:
+    def cooperate(self, history):
+        other_player_moves = (history[:-1])
+        if other_player_moves == True:
+            return True
+        else:
+            return False
+    def get_name(self):
+        return "Confused"
 
