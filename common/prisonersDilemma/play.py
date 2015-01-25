@@ -9,6 +9,7 @@ def get_players_functions():
         baseline.Kind,
         baseline.Random,
         baseline.Unforgiving,
+        baseline.Confused
     ]
     return players
 

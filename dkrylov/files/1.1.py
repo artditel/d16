@@ -12,6 +12,5 @@ def f():
 					a = a + 1
 		print(a)
 	except:
-		f()
 		print("File not found. Try another name, please.")
 f()
