@@ -1,3 +1,4 @@
+import random
 def tictac(my_moves, enemy_moves):
 	if False not in enemy_moves:
 		return False
