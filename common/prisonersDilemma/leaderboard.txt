@@ -1,7 +1,8 @@
-king won!!!!!!!!!!1. Confused with result 740
-king won!!!!!!!!!!2. Angry with result 680
-king won!!!!!!!!!!3. king with result 668
-king won!!!!!!!!!!4. Unforgiving with result 570
-king won!!!!!!!!!!5. tictac with result 536
-king won!!!!!!!!!!6. Random with result 170
-king won!!!!!!!!!!7. Kind with result -4
+1. Unforgiving with result 870
+2. copying with result 845
+3. king with result 704
+4. Confused with result 700
+5. Angry with result 684
+6. tictac with result 603
+7. Random with result 359
+8. Kind with result 296
