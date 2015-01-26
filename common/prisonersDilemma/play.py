@@ -2,6 +2,7 @@ import random
 import baseline
 import elizshuvaeva
 import tictac
+import artemka
 
 GAMES_COUNT = 100
 
