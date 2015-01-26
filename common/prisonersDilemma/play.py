@@ -13,7 +13,8 @@ def get_players_functions():
         baseline.Random,
         baseline.Unforgiving,
         elizshuvaeva.Confused, 
-        tictac.tictac
+        tictac.tictac,
+        baseline.king
     ]
     return players
 
@@ -77,7 +78,7 @@ def main():
     print()
     sorted_players = sorted(players, key=lambda p: p.get_score(), reverse=True)
     for ind, player in enumerate(sorted_players):
-        print("{}. {} with result {}".format(ind + 1, player.get_name(), player.get_score()))
+        print("king won!!!!!!!!!!"{}. {} with result {}".format(ind + 1, player.get_name(), player.get_score()))
 
 
 
