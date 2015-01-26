@@ -1,6 +1,7 @@
 import random
 import baseline
 import elizshuvaeva
+import tictac
 
 GAMES_COUNT = 100
 
@@ -10,7 +11,8 @@ def get_players_functions():
         baseline.Kind,
         baseline.Random,
         baseline.Unforgiving,
-        elizshuvaeva.Confused
+        elizshuvaeva.Confused, 
+        tictac.tictac
     ]
     return players
 
