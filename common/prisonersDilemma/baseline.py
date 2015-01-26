@@ -12,4 +12,4 @@ def Random(my_moves, enemy_moves):
 def Unforgiving(my_moves, enemy_moves):
     return False not in enemy_moves
 def king(my_moves, enemy_moves):
-	   return False
+	return False
