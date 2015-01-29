@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     players = []
     scorers = get_scorers()
-    names = parser.scorers if len(parser.scorers) > 0 else get_scorers().keys()
+    names = list(parser.scorers if len(parser.scorers) > 0 else get_scorers().keys())
     for name in names:
         if name == 'manual':
             players.append(game.ManualFinder(make_default_player(game.ScorerWrapper(baseline.material_scorer), parser.lister)))
