@@ -38,3 +38,5 @@ def material_scorer(p):
 
     return calc_by_fen(p) if use_fen else calc_by_bitboard(p)
 
+def titanic(p):
+    return random.uniform(-1, 1)
