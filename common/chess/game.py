@@ -231,51 +231,49 @@ class AlphaBetaNode():
             return None
         return self.moves[self.cur_ind]
 
-class AlphaBetaFinder(MoveFinder):
-    def __init__(self, scorer, depth):
-        super(AlphaBetaFinder, self).__init__(scorer)
-        self.depth = depth
 
-    def _find(self, position):
+# class AlphaBetaFinder(MoveFinder):
+#     def __init__(self, scorer, depth):
+#         super(AlphaBetaFinder, self).__init__(scorer)
+#         self.depth = depth
 
-        best_move, expected_score = 0, 0
-        nodes_stack = [AlphaBetaNode(self.scorer, position)]
+#     def _find(self, position):
 
-        while len(nodes_stack) > 0:
-            upper = nodes_stack[-1]
+#         best_move, expected_score = 0, 0
+#         nodes_stack = [AlphaBetaNode(self.scorer, position)]
 
-            if not upper.started_process:
-                upper.started_process = True
-                if len(upper.move_scores) > 0:
-                    next_move = nodes_stack[-1].next()
-                    position.push(next_move)
-                    nodes_stack.push(AlphaBetaFinder(self.scorer, position, len(nodes_stack) > self.depth))
-                else:
-                    #list processing
-                    upper.min = upper.max = self.scorer(position)
+#         while len(nodes_stack) > 0:
+#             upper = nodes_stack[-1]
 
-                    min_i = len(nodes_stack)
+#             if not upper.started_process:
+#                 upper.started_process = True
+#                 if len(upper.move_scores) > 0:
+#                     next_move = nodes_stack[-1].next()
+#                     position.push(next_move)
+#                     nodes_stack.push(AlphaBetaFinder(self.scorer, position, len(nodes_stack) > self.depth))
+#                 else:
+#                     #list processing
+#                     upper.min = upper.max = self.scorer(position)
 
-                    new_stack_length = len(nodes_stack)
-                    #update all nodes min-max
-                    for i in range(len(nodes_stack)-2 : -1 : -1):
-                        if nodes_stack[i].white:
-                            nodes_stack[i].min = max(nodes_stack[i].min, nodes_stack[i+1].min)
-                            if nodes_stack[i].max > :
-                                pass
-                        else:
-                            nodes_stack[i].max = min(nodes_stack[i].max, nodes_stack[i+1].max)
+#                     min_i = len(nodes_stack)
 
-
-
+#                     new_stack_length = len(nodes_stack)
+#                     #update all nodes min-max
+#                     for i in range(len(nodes_stack)-2 : -1 : -1):
+#                         if nodes_stack[i].white:
+#                             nodes_stack[i].min = max(nodes_stack[i].min, nodes_stack[i+1].min)
+#                             if nodes_stack[i].max > :
+#                                 pass
+#                         else:
+#                             nodes_stack[i].max = min(nodes_stack[i].max, nodes_stack[i+1].max)
 
 
-            if next_move is None:
-                nodes_stack.pop()
-                position.pop()
-            else:
 
 
+#             if next_move is None:
+#                 nodes_stack.pop()
+#                 position.pop()
+#             else:
 
 
 
@@ -286,24 +284,26 @@ class AlphaBetaFinder(MoveFinder):
 
 
 
-        possible_moves = position.legal_moves
-        if recursion_depth == 0 or len(possible_moves) == 0:
-            return None, self.scorer.calc(position)
 
-        move_scores = []
-        for move in possible_moves:
-            position.push(move)
-            score = self._calc_best_move_score(position, recursion_depth - 1)[1]
-            move_scores.append((move, score))
-            position.pop()
 
-        random.shuffle(move_scores)
-        move_scores.sort(key=lambda move_score: move_score[1], reverse=position.is_white_move())
+#         possible_moves = position.legal_moves
+#         if recursion_depth == 0 or len(possible_moves) == 0:
+#             return None, self.scorer.calc(position)
 
-        if recursion_depth == self.depth:
-            print(move_scores[:3])
+#         move_scores = []
+#         for move in possible_moves:
+#             position.push(move)
+#             score = self._calc_best_move_score(position, recursion_depth - 1)[1]
+#             move_scores.append((move, score))
+#             position.pop()
 
-        return move_scores[0]
+#         random.shuffle(move_scores)
+#         move_scores.sort(key=lambda move_score: move_score[1], reverse=position.is_white_move())
+
+#         if recursion_depth == self.depth:
+#             print(move_scores[:3])
+
+#         return move_scores[0]
 
 
 
