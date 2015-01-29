@@ -12,6 +12,7 @@ def get_scorers():
     scorers = {
         "random": baseline.random_scorer,
         "material": baseline.material_scorer,
+        "titanic": baseline.titanic,
     }
     scorers_wrapped = {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
 
