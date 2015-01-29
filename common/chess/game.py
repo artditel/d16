@@ -75,18 +75,18 @@ class Position(chess.Bitboard):
             .replace('6', ' '*6*2)  \
             .replace('7', ' '*7*2)  \
             .replace('8', ' '*8*2)  \
-            .replace('p', self.RED   + 'p' + self.ENDC + ' ') \
-            .replace('n', self.RED   + 'n' + self.ENDC + ' ') \
-            .replace('b', self.RED   + 'b' + self.ENDC + ' ') \
-            .replace('r', self.RED   + 'r' + self.ENDC + ' ') \
-            .replace('q', self.RED   + 'q' + self.ENDC + ' ') \
-            .replace('k', self.RED   + 'k' + self.ENDC + ' ') \
-            .replace('P', self.GREEN + 'p' + self.ENDC + ' ') \
-            .replace('N', self.GREEN + 'n' + self.ENDC + ' ') \
-            .replace('B', self.GREEN + 'b' + self.ENDC + ' ') \
-            .replace('R', self.GREEN + 'r' + self.ENDC + ' ') \
-            .replace('Q', self.GREEN + 'q' + self.ENDC + ' ') \
-            .replace('K', self.GREEN + 'k' + self.ENDC + ' '))
+            .replace('p', 'p ') \
+            .replace('n', 'n ') \
+            .replace('b', 'b ') \
+            .replace('r', 'r ') \
+            .replace('q', 'q ') \
+            .replace('k', 'k ') \
+            .replace('P','P ') \
+            .replace('N','N ') \
+            .replace('B','B ') \
+            .replace('R','R ') \
+            .replace('Q','Q ') \
+            .replace('K','K '))
         # print('\n==================================\n')
 
 
@@ -290,8 +290,7 @@ class AlphaBetaNode():
 #         if recursion_depth == 0 or len(possible_moves) == 0:
 #             return None, self.scorer.calc(position)
 
-#         move_scores = []
-#         for move in possible_moves:
+#         move_scores = []`
 #             position.push(move)
 #             score = self._calc_best_move_score(position, recursion_depth - 1)[1]
 #             move_scores.append((move, score))
