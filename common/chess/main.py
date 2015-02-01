@@ -37,7 +37,7 @@ def run_compare(first, second, rounds=10, verbose=True):
 def parse_args():
     parser = argparse.ArgumentParser(description='Chess contest leaderboard program. Use python main.py player1 player2 for their fight')
     parser.add_argument('--rounds', type=int, default=2, help='how many rounds each pair plays')
-    parser.add_argument('--quiet', action='store_true', help='print now debug info')
+    parser.add_argument('--quiet', action='store_true', help='print no debug info')
     parser.add_argument('--random', action='store_true', help='use true random (not for leaderboard)')
     parser.add_argument('--lister', default="0,5,5", help='set recursion depths to use. For e.g. 0,5,5')
     parser.add_argument(
