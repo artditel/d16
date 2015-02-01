@@ -1,16 +1,23 @@
-n = int(input())
-m = int(input())
-a = []
-for i in range(m):
-	a.append([])
-	for t in range(n):
-		a[i].append(0)
-a[m-1][0]==2
-for i in range(m):
-	for g in range(n):
-		if (g>3 and a[i][g-3]==2) or (g>3 and a[i-1][g-3]==2) or (g>2 and a[i-2][g-2]==2) or (g>2 and a[i-1][g-1]==2) or a[i-1][g]==2:
-			a[i][g] = 1
+length = int(input())
+width = int(input())
+winning_positions = []
+
+for i in range(width):
+	winning_positions.append([])
+	for t in range(length):
+		winning_positions[i].append(0)
+winning_positions[width-1][0] == 2
+
+for i in range(width):
+	for g in range(length):
+		if (g>3 and winning_positions[i][g-3] == 2) or \
+		(g > 3 and winning_positions[i-1][g-3] == 2) or \
+		(g > 2 and winning_positions[i-2][g-2] == 2) or \
+		(g > 2 and winning_positions[i-1][g-1] == 2) or \
+		winning_positions[i-1][g] == 2:
+			winning_positions[i][g] = 1
 		else:
-			a[i][g] = 2
-for i in reversed(a):
-    print(i) 
+			winning_positions[i][g] = 2
+
+for i in reversed(winning_positions):
+	print(i) 
