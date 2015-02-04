@@ -1,8 +1,8 @@
-1. Unforgiving with result 870
-2. copying with result 845
-3. king with result 704
-4. Confused with result 700
-5. Angry with result 684
-6. tictac with result 603
-7. Random with result 359
-8. Kind with result 296
+1. Unforgiving with result 1311
+2. copying with result 1123
+3. Angry with result 1056
+4. king with result 1052
+5. tictac with result 990
+6. Random with result 741
+7. Kind with result 692
+8. Confused with result 367
