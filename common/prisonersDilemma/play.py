@@ -68,7 +68,7 @@ def play(player1, player2, win_table=WINS):
     return players_wins
 
 def main():
-    random.seed(1)
+    random.seed(57005538399847203271)
     players = [Player(p) for p in get_players_functions()]
 
     for i, p1 in enumerate(players):
@@ -85,3 +85,4 @@ def main():
 
 
 main()
+
