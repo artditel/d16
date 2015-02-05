@@ -18,8 +18,6 @@ PIECE_2_SCORE = {
 }
 
 def material_scorer(p):
-    print(p.get_pieces())
-
     s = 0
     for square in chess.SQUARES:
         piece = p.piece_at(square)
