@@ -26,3 +26,5 @@ def material_scorer(p):
         s += PIECE_2_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1)
     return s
 
+def titanic(p):
+    return random.uniform(-1, 1)    
