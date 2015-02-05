@@ -1,27 +1,17 @@
+#!/usr/bin/env python3
+# encoding: utf-8
 import sys
 import argparse
 import random
 import game
 import baseline
 
-# ===================================================
-# scorers list
-# ===================================================
-
 def get_scorers():
     scorers = {
-        "random": baseline.random_scorer,
+        "random":   baseline.random_scorer,
         "material": baseline.material_scorer,
-        "titanic": baseline.titanic,
     }
-    scorers_wrapped = {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
-
-    return scorers_wrapped
-
-
-# ===================================
-# run!
-# ===================================
+    return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
 
 def run_compare(first, second, rounds=10, verbose=True):
     score_first, score_second = 0, 0
@@ -34,24 +24,25 @@ def run_compare(first, second, rounds=10, verbose=True):
     print('Final score :', score_first, score_second)
     return score_first, score_second
 
-
 def parse_args():
     parser = argparse.ArgumentParser(description='Chess contest leaderboard program. Use python main.py player1 player2 for their fight')
     parser.add_argument('--rounds', type=int, default=2, help='how many rounds each pair plays')
-    parser.add_argument('--quiet', action='store_true', help='print no debug info')
+    parser.add_argument('--quiet',  action='store_true', help='no debug info')
     parser.add_argument('--random', action='store_true', help='use true random (not for leaderboard)')
-    parser.add_argument('--lister', default="0,5,5", help='set recursion depths to use. For e.g. 0,5,5')
+    parser.add_argument('--lister', default="0,5,5",     help='set recursion depths to use. E.g. 0,5,5')
     parser.add_argument(
         'scorers',
         nargs='*',
-        help='scorers that should play with eash other (all if no scorers)'
+        help='scorers that should play with eaсh other (default: all)'
     )
-
     return parser.parse_args()
 
 def make_default_player(scorer, lister="0,5,5"):
     val_list = list(map(int, lister.split(',')))
-    return game.DepthWidthMoveFinder(scorer, game.PositionScoreLister(scorer, val_list))
+    if len(val_list) == 1 and val_list[0] >= 2:
+        return game.AlphaBetaFinder(scorer, val_list[0])
+    else:
+        return game.DepthWidthMoveFinder(scorer, game.PositionScoreLister(scorer, val_list))
 
 if __name__ == '__main__':
     parser = parse_args()
@@ -70,6 +61,8 @@ if __name__ == '__main__':
             print("unexpected player {}".format(name))
             print("expected: manual or %s" % " ".join(scorers.keys()))
             sys.exit()
+    # players = [make_default_player(scorers['material']), game.DepthWidthMoveFinder(scorers['material'], game.PositionScoreLister(scorers['material'], [0, 10, 10]))]
+
 
     results = [0] * len(players)
     for i, p1 in enumerate(players):
@@ -85,3 +78,4 @@ if __name__ == '__main__':
     for res, name in sorted(zip(results, names), reverse=True):
         print("{}. {} with result {}".format(place, name, res))
         place += 1
+

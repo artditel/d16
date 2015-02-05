@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import random
 import time
 import sys
 import chess
 import baseline
 
-# ===================================================
-# scorers
-# ===================================================
-
 class ScorerWrapper:
     WHITE_WINS_SCORE = 1000
     BLACK_WINS_SCORE = -1000
     DRAW_SCORE = 0
 
-    def __init__(self, scorer):
+    def __init__(self, scorer, use_cache=True):
         self.scorer = scorer
         self.total_calls = 0
+        self.cached_calls = 0
         self.cache = {}
+        self.use_cache = use_cache
 
     def calc(self, p):
-        zobrist_hash = p.zobrist_hash()
-        pos_hash = (zobrist_hash, p.transpositions[zobrist_hash])
-        if pos_hash in self.cache:
-            return self.cache[pos_hash]
-
+        if self.use_cache:
+            zobrist_hash = p.zobrist_hash()
+            pos_hash = (zobrist_hash, p.transpositions[zobrist_hash])
+            if pos_hash in self.cache:
+                self.cached_calls += 1
+                return self.cache[pos_hash]
 
         self.total_calls += 1
         if p.is_game_over():
@@ -38,16 +37,23 @@ class ScorerWrapper:
         else:
             score = self.scorer(p)
 
-        self.cache[pos_hash] = score
+        if self.use_cache:
+            self.cache[pos_hash] = score
         return score
 
-# ===================================================
-# core
-# ===================================================
 class Position(chess.Bitboard):
-    GREEN = '\033[92m'
-    RED   = '\033[91m'
+    GREEN = ''
+    RED   = ''
     ENDC  = '\033[0m'
+
+    def get_pieces(self):
+        pieces = []
+        for i in range(8):
+            for j in range(8):
+                if self.piece_at(8*i + j) is not None:
+                    pieces.append((self.piece_at(8*i + j).symbol(), i, j))
+        return pieces
+
 
     def is_white_move(self):
         return self.turn == chess.WHITE
@@ -65,34 +71,56 @@ class Position(chess.Bitboard):
         print( '%d.%s' % (move_num, ' ...' if self.is_white_move() else ''), self.peek() if len(self.move_stack) else "")
         print()
         s = self.fen().split()[0]
-        print( s \
-            .replace('/', '\n')   \
-            .replace('1', ' '*1*2)  \
-            .replace('2', ' '*2*2)  \
-            .replace('3', ' '*3*2)  \
-            .replace('4', ' '*4*2)  \
-            .replace('5', ' '*5*2)  \
-            .replace('6', ' '*6*2)  \
-            .replace('7', ' '*7*2)  \
-            .replace('8', ' '*8*2)  \
-            .replace('p', 'p ') \
-            .replace('n', 'n ') \
-            .replace('b', 'b ') \
-            .replace('r', 'r ') \
-            .replace('q', 'q ') \
-            .replace('k', 'k ') \
-            .replace('P','P ') \
-            .replace('N','N ') \
-            .replace('B','B ') \
-            .replace('R','R ') \
-            .replace('Q','Q ') \
-            .replace('K','K '))
+        try:
+            print( s \
+                .replace('/', '\n')   \
+                .replace('1', ' '*1*2)  \
+                .replace('2', ' '*2*2)  \
+                .replace('3', ' '*3*2)  \
+                .replace('4', ' '*4*2)  \
+                .replace('5', ' '*5*2)  \
+                .replace('6', ' '*6*2)  \
+                .replace('7', ' '*7*2)  \
+                .replace('8', ' '*8*2)  \
+                .replace('p', '♟ ') \
+                .replace('n', '♞ ') \
+                .replace('b', '♝ ') \
+                .replace('r', '♜ ') \
+                .replace('q', '♛ ') \
+                .replace('k', '♚ ') \
+                .replace('P', '♙ ') \
+                .replace('N', '♘ ') \
+                .replace('B', '♗ ') \
+                .replace('R', '♖ ') \
+                .replace('Q', '♕ ') \
+                .replace('K', '♔ '))
+        except:
+            print( s \
+                .replace('/', '\n')   \
+                .replace('1', ' '*1*2)  \
+                .replace('2', ' '*2*2)  \
+                .replace('3', ' '*3*2)  \
+                .replace('4', ' '*4*2)  \
+                .replace('5', ' '*5*2)  \
+                .replace('6', ' '*6*2)  \
+                .replace('7', ' '*7*2)  \
+                .replace('8', ' '*8*2)  \
+                .replace('p', 'p ') \
+                .replace('n', 'n ') \
+                .replace('b', 'b ') \
+                .replace('r', 'r ') \
+                .replace('q', 'q ') \
+                .replace('k', 'k ') \
+                .replace('P', 'P ') \
+                .replace('N', 'N ') \
+                .replace('B', 'B ') \
+                .replace('R', 'R ') \
+                .replace('Q', 'Q ') \
+                .replace('K', 'K '))
+
+
         # print('\n==================================\n')
 
-
-# ===================================================
-# move listers
-# ===================================================
 class MoveLister(object):
     def get(self, p, depth):
         '''
@@ -135,9 +163,6 @@ class PositionScoreLister(MoveLister):
         width = self.depth_widths[depth]
         return scored_moves if width == 0 else scored_moves[:width]
 
-# ===================================================
-# move finders
-# ===================================================
 class MoveFinder(object):
     def __init__(self, scorer):
         self.scorer = scorer
@@ -147,6 +172,7 @@ class MoveFinder(object):
 
     def find(self, p):
         self.scorer.total_calls = 0
+        self.scorer.cached_calls = 0
         return self._find(p)
 
 class DepthWidthMoveFinder(MoveFinder):
@@ -167,10 +193,6 @@ class DepthWidthMoveFinder(MoveFinder):
 
         random.shuffle(scored_variations)
         scored_variations.sort(key=lambda t: t[1], reverse=p.is_white_move())
-
-        #if depth == 0:
-        #    print(scored_variations[:3])
-
         return (max if p.is_white_move() else min)(scored_variations, key=lambda t: t[1])
 
 class BruteForceFinder(MoveFinder):
@@ -180,7 +202,7 @@ class BruteForceFinder(MoveFinder):
 
     def _calc_best_move_score(self, position, recursion_depth = 2):
         possible_moves = position.legal_moves
-        if recursion_depth == 0 or len(possible_moves) == 0:
+        if recursion_depth == 0 or position.is_game_over():
             return None, self.scorer.calc(position)
 
         move_scores = []
@@ -202,109 +224,96 @@ class BruteForceFinder(MoveFinder):
         move, score = self._calc_best_move_score(position, self.depth)
         return move, score
 
+class AlphaBetaFinder(MoveFinder):
+    def __init__(self, scorer, depth):
+        super(AlphaBetaFinder, self).__init__(scorer)
+        self.depth = depth
+        self.INFTY = ScorerWrapper.WHITE_WINS_SCORE + 1
+        self.MINUS_INFTY = ScorerWrapper.BLACK_WINS_SCORE - 1
 
+    def calc_move_score(self, position, move):
+        position.push(move)
 
-class AlphaBetaNode():
-    def __init__(self, scorer, position, is_list = False):
-        if is_list:
-            self.moves = []
+        if position.is_game_over():
+            score = self.scorer.calc(position)
         else:
-            move_scores = []
-            for move in position.legal_moves:
+            scores = []
+            for move in list(position.legal_moves):
                 position.push(move)
-                score = scorer(position)
-                move_scores.append((move, score))
+                scores.append(self.scorer.calc(position))
                 position.pop()
-            move_scores.sort(key=lambda move_score: move_score[1], reverse=position.is_white_move())
 
-            self.moves = [move for move,s in move_scores]
+            if position.is_white_move():
+                score = max(scores)
+            else:
+                score = min(scores)
 
-        self.min = ScorerWrapper.BLACK_WINS_SCORE
-        self.max = ScorerWrapper.WHITE_WINS_SCORE
-        self.white = position.is_white_move()
-        self.cur_ind = -1
-        self.started_process = False
-
-    def next(self):
-        self.cur_ind += 1
-        if self.cur_ind >= len(self.moves):
-            return None
-        return self.moves[self.cur_ind]
+        position.pop()
 
 
-# class AlphaBetaFinder(MoveFinder):
-#     def __init__(self, scorer, depth):
-#         super(AlphaBetaFinder, self).__init__(scorer)
-#         self.depth = depth
+        return score
 
-#     def _find(self, position):
+    def alpha_beta_find(self, position, depth, alpha, beta):
+        if depth == 0 or position.is_game_over():
+            return None, self.scorer.calc(position)
 
-#         best_move, expected_score = 0, 0
-#         nodes_stack = [AlphaBetaNode(self.scorer, position)]
+        possible_moves = list(position.legal_moves)
+        if depth == self.depth:
+            reverse = position.is_white_move()
+            possible_moves.sort(key = lambda move: self.calc_move_score(position, move), reverse=reverse)
+            # print (depth, reverse)
+            # for move in possible_moves:
+            #     print (move, self.calc_move_score(position, move))
+        else:
+            #euristic for faster calculation
+            random.shuffle(possible_moves)
 
-#         while len(nodes_stack) > 0:
-#             upper = nodes_stack[-1]
+        best_move = possible_moves[0]
+        if position.is_white_move():
+            score = self.MINUS_INFTY
+            for move in possible_moves:
+                position.push(move)
+                m, new_score = self.alpha_beta_find(position, depth - 1, alpha, beta)
+                position.pop()
+                if new_score > score:
+                    score = new_score
+                    best_move = move
 
-#             if not upper.started_process:
-#                 upper.started_process = True
-#                 if len(upper.move_scores) > 0:
-#                     next_move = nodes_stack[-1].next()
-#                     position.push(next_move)
-#                     nodes_stack.push(AlphaBetaFinder(self.scorer, position, len(nodes_stack) > self.depth))
-#                 else:
-#                     #list processing
-#                     upper.min = upper.max = self.scorer(position)
+                alpha = max(alpha, score)
+                if beta <= alpha:
+                    break #beta cut-off
 
-#                     min_i = len(nodes_stack)
+        else:
+            score = self.INFTY
+            for move in possible_moves:
+                position.push(move)
+                m, new_score = self.alpha_beta_find(position, depth - 1, alpha, beta)
+                position.pop()
+                if new_score < score:
+                    score = new_score
+                    best_move = move
 
-#                     new_stack_length = len(nodes_stack)
-#                     #update all nodes min-max
-#                     for i in range(len(nodes_stack)-2 : -1 : -1):
-#                         if nodes_stack[i].white:
-#                             nodes_stack[i].min = max(nodes_stack[i].min, nodes_stack[i+1].min)
-#                             if nodes_stack[i].max > :
-#                                 pass
-#                         else:
-#                             nodes_stack[i].max = min(nodes_stack[i].max, nodes_stack[i+1].max)
-
-
-
-
-#             if next_move is None:
-#                 nodes_stack.pop()
-#                 position.pop()
-#             else:
-
-
-
-
-
-
+                beta = min(beta, score)
+                if beta <= alpha:
+                    break #alpha cut-off
+        return best_move, score
 
 
+    def _find(self, position):
+        move, score = self.alpha_beta_find(position, self.depth, self.MINUS_INFTY, self.INFTY)
 
+        if False:
+            #compare with brute-force
+            calls = self.scorer.total_calls + self.scorer.cached_calls
+            check = BruteForceFinder(self.scorer, self.depth)
+            print (check.find(position))
+            calls_after = self.scorer.total_calls + self.scorer.cached_calls
+            print("alpha-beta calls: {}, brute-force calls: {}, diff: {}".format(calls, calls_after, calls_after - calls))
 
+            # print (move, score)
+            # assert(check._find(position)[1] == score)
 
-
-#         possible_moves = position.legal_moves
-#         if recursion_depth == 0 or len(possible_moves) == 0:
-#             return None, self.scorer.calc(position)
-
-#         move_scores = []`
-#             position.push(move)
-#             score = self._calc_best_move_score(position, recursion_depth - 1)[1]
-#             move_scores.append((move, score))
-#             position.pop()
-
-#         random.shuffle(move_scores)
-#         move_scores.sort(key=lambda move_score: move_score[1], reverse=position.is_white_move())
-
-#         if recursion_depth == self.depth:
-#             print(move_scores[:3])
-
-#         return move_scores[0]
-
-
+        return move, score
 
 class ManualFinder(MoveFinder):
     def __init__(self, default_finder):
@@ -320,7 +329,6 @@ class ManualFinder(MoveFinder):
         def format_func(ind_move):
             return "%d: %s" % ind_move
         print(list(map(format_func, enumerate(possible_moves, start=1))))
-
 
         success = False
         while not success:
@@ -347,9 +355,6 @@ class ManualFinder(MoveFinder):
                     print("Bad input. Move or index ({}-{}) or q expected".format(1, len(position.legal_moves)))
         return move, 0 #mock score
 
-# ===================================
-# TGame
-# ===================================
 class Game(object):
     def __init__(self, white_finder, black_finder, verbose=True, step_by_step=False, step_by_advantage=False):
         self.position = Position()
@@ -370,9 +375,11 @@ class Game(object):
             if self.verbose:
                 self.position.print_console()
                 total_calls = finder.scorer.total_calls
+                cached_calls = finder.scorer.cached_calls
                 total_time  = time.time() - start
                 position_scores.append(score)
                 print('calls :', total_calls)
+                print('in cache :', cached_calls    )
                 print('time  :', total_time)
                 print('speed :', total_calls / total_time)
                 print('score :', position_scores[-1])
@@ -398,14 +405,10 @@ def run_once(first, second):
     print('Result', w, ':', b)
 
 if __name__ == '__main__':
-#    mode = 'compare'
-    mode = 'once'
-
-
     first_scorer  = SCORERS_WRAPPED['material']
     second_scorer = SCORERS_WRAPPED['material']
-    (run_once if mode == 'once' else run_compare)(
-#        ManualFinder(DepthWidthMoveFinder(first_scorer, PositionScoreLister(first_scorer, [0, 10]))),
+    run_once(
         DepthWidthMoveFinder(first_scorer, PositionScoreLister(first_scorer, [0, 10])),
         BruteForceFinder(second_scorer, 2),
     )
+
