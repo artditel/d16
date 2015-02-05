@@ -4,6 +4,7 @@ import elizshuvaeva
 import tictac
 import artemka
 import azhuravlev1
+import qwert
 
 GAMES_COUNT = 100
 
@@ -17,6 +18,7 @@ def get_players_functions():
         tictac.tictac,
         azhuravlev1.king,
         artemka.copying,
+        qwert.qwert,
     ]
     return players
 
