@@ -1,20 +1,22 @@
 import random
 import baseline
-import elizshuvaeva
+#import elizshuvaeva
 import tictac
 import artemka
 import azhuravlev1
 import qwert
+import Z
 
 GAMES_COUNT = 100
 
 def get_players_functions():
     players = [
+        Z.fair,
         baseline.Angry,
         baseline.Kind,
         baseline.Random,
         baseline.Unforgiving,
-        elizshuvaeva.Confused,
+        #elizshuvaeva.Confused,
         tictac.tictac,
         azhuravlev1.king,
         artemka.copying,
