@@ -11,7 +11,10 @@ def get_scorers():
         "random":   baseline.random_scorer,
         "material": baseline.material_scorer,
         "titanic": baseline.titanic,
+        "varya": baseline.varya,
+        "varya_scorer_class": baseline.varya_scorer_class(),
     }
+
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
 
 def run_compare(first, second, rounds=10, verbose=True):
