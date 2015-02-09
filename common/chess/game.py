@@ -54,6 +54,19 @@ class Position(chess.Bitboard):
                     pieces.append((self.piece_at(8*i + j).symbol(), i, j))
         return pieces
 
+    def get_white_pieces(self):
+        return [x for x in self.get_pieces() if x[0].upper() == x[0]]
+
+    def get_black_pieces(self):
+        return [x for x in self.get_pieces() if x[0].lower() == x[0]]
+
+    def get_pieces(self):
+        pieces = []
+        for i in range(8):
+            for j in range(8):
+                if self.piece_at(8*i + j) is not None:
+                    pieces.append((self.piece_at(8*i + j).symbol(), i, j))
+        return pieces
 
     def is_white_move(self):
         return self.turn == chess.WHITE
@@ -137,7 +150,9 @@ class TrivialLister(MoveLister):
     def get(self, p, depth):
         if depth >= self.max_depth:
             return []
-        return [(move, 0.) for move in p.legal_moves]
+        ans = [(move, 0.) for move in p.legal_moves]
+        random.shuffle(ans)
+        return ans
 
 class PositionScoreLister(MoveLister):
     def __init__(self, scorer, depth_widths):
@@ -258,15 +273,13 @@ class AlphaBetaFinder(MoveFinder):
             return None, self.scorer.calc(position)
 
         possible_moves = list(position.legal_moves)
+        random.shuffle(possible_moves)
         if depth == self.depth:
             reverse = position.is_white_move()
             possible_moves.sort(key = lambda move: self.calc_move_score(position, move), reverse=reverse)
             # print (depth, reverse)
             # for move in possible_moves:
             #     print (move, self.calc_move_score(position, move))
-        else:
-            #euristic for faster calculation
-            random.shuffle(possible_moves)
 
         best_move = possible_moves[0]
         if position.is_white_move():
