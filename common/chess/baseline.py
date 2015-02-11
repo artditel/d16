@@ -116,3 +116,9 @@ class varya_scorer_class(EasyScorer):
     def get_king_score(self, i, j):
         return -i/10.
 
+class liz_scorer(EasyScorer):
+    def get_pawn_score(self, i, j):
+        if i > 1:
+            return 1 + i/10
+        else:
+            return 1
