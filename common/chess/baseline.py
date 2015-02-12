@@ -130,6 +130,23 @@ def varya(p):
             s += (-n)*3/100.
     return s
 
+def daylight_grande(p):
+    s = 0
+    for square in chess.SQUARES:
+        piece = p.piece_at(square)
+        if piece == None:
+            s += -0.1
+            continue
+        s += PIECE_2_SCORE[piece.symbol().lower()] * (1.1 if piece.color == chess.WHITE else -1)
+    for pc, n, e in p.get_pieces():
+        if pc == 'p' or pc == 'P':
+            s += n*0.2
+        if pc == 'r' or pc == 'R':
+            s += n*0.15
+        if pc == 'n' or pc == 'N':
+            s += n*0.1
+    return s
+
 class varya_scorer_class(EasyScorer):
     def get_king_score(self, i, j):
         return -i/10.
