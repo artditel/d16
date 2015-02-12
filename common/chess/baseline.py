@@ -153,12 +153,12 @@ class varya_scorer_class(EasyScorer):
 
 class liz_scorer(EasyScorer):
     if len(self.p.move_stack) >= 50:
+        return 1 + i/10
+    else:
+        if i<4:
             return 1 + i/10
         else:
-            if i<4: 
-                return 1 + i/10
-            else:
-                return 1
+            return 1
 
 class artemka_scorer_class(EasyScorer):
     def get_queen_score(self, i , j):
