@@ -66,8 +66,16 @@ class EasyScorer:
     def get_king_score(self, i, j):
         return 0
 
-def titanic(p):
-    return random.uniform(-1, 1)
+def titanic(EasyScorer, p):
+    if len(p.move_stack) >= 50:
+        def get_pawn_score(self, i, j):
+            return i**(1/3)
+        def get_knight_score(self, i, j):
+            return 2
+        def get_bishop_score(self, i, j):
+            return 4
+        def get_rook_score(self, i, j):
+            return 6
 def Timur(p):
     s=0
     bish=[0,0]
