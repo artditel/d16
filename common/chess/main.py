@@ -13,7 +13,8 @@ def get_scorers():
         "titanic": baseline.titanic,
         "varya": baseline.varya,
         "varya_scorer_class": baseline.varya_scorer_class(),
-        "Timur": baseline.Timur
+        "Timur": baseline.Timur,
+        "liz":baseline.liz_scorer(),
     }
 
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
