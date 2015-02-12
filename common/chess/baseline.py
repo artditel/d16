@@ -88,25 +88,24 @@ class titanic(EasyScorer):
             return 6
         else:
             return 5
-def Timur(p):
-    s=0
-    bish=[0,0]
-    pawn=0
-    pieces = p.get_pieces()
-    for square in chess.SQUARES:
-            piece = p.piece_at(square)
-            if piece == None:
-                continue
-            if (piece.symbol()=='B' and piece.color == chess.WHITE):
-                bish[0]+=1
-            if (piece.symbol()=='b' and piece.color == chess.BLACK):
-               bish[1]+=1
-            s += PIECE_2_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1)
-    if bish[0]==2:
-        s+=(1/3)
-    if bish[1]==2:
-        s-=(1/3)
-    return s
+class Timur_scorer(EasyScorer):
+    #pieces=p.get_pieces()
+    def get_king_score(self, i, j):
+        return 0.1/((5-i)**2+1)
+    def get_pawn_score(self, i, j):
+        return 1+0.5/((5-i)**2+1)
+
+    def get_knight_score(self, i, j):
+        return 3+1.5/((5-i)**2+1)
+
+    def get_bishop_score(self, i, j):
+        return 3+1.5/((5-i)**2+1)
+
+    def get_rook_score(self, i, j):
+        return 5+2/((5-i)**2+1)
+
+    def get_queen_score(self, i, j):
+        return 9+4.5/((5-i)**2+1)
 
 def material_scorer(p):
     s = 0
