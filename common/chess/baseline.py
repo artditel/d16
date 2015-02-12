@@ -79,12 +79,7 @@ def Timur(p):
                 continue
             if (piece.symbol()=='B' and piece.color == chess.WHITE) or (piece.symbol()=='b' and piece.color == chess.BLACK):
                 bish+=1
-            if (piece.symbol()=='K' and piece.color == chess.WHITE) or (piece.symbol()=='k' and piece.color == chess.BLACK):
-                King=(square[0],square[1])
-            if (piece.symbol()=='Q' and piece.color == chess.WHITE) or (piece.symbol()=='q' and piece.color == chess.BLACK):
-                Qween=(square[0],square[1])          
             s += PIECE_2_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1) 
-    s+=1/(         ((King[0]-Queen[0])**2+(King[1]-Queen[1])**2)**0.5)
     if bish==2:
         s+=(1/3)* (1 if piece.color == chess.WHITE else -1)
     return s
