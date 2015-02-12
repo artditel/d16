@@ -19,6 +19,7 @@ PIECE_2_SCORE = {
 
 class EasyScorer:
     def __call__(self, p):
+        self.p = p
         return self.calc_score(p)
 
     def calc_score(self, p):
@@ -79,7 +80,7 @@ def titanic(EasyScorer, p):
 def Timur(p):
     s=0
     bish=[0,0]
-    pawn=0    
+    pawn=0
     pieces = p.get_pieces()
     for square in chess.SQUARES:
             piece = p.piece_at(square)
@@ -88,8 +89,8 @@ def Timur(p):
             if (piece.symbol()=='B' and piece.color == chess.WHITE):
                 bish[0]+=1
             if (piece.symbol()=='b' and piece.color == chess.BLACK):
-               bish[1]+=1      
-            s += PIECE_2_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1) 
+               bish[1]+=1
+            s += PIECE_2_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1)
     if bish[0]==2:
         s+=(1/3)
     if bish[1]==2:
