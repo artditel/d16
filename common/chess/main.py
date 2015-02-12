@@ -15,6 +15,7 @@ def get_scorers():
         "varya_scorer_class": baseline.varya_scorer_class(),
         "Timur": baseline.Timur,
         "liz":baseline.liz_scorer(),
+        "grande": baseline.daylight_grande,
     }
 
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
