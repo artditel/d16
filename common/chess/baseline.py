@@ -152,9 +152,10 @@ class varya_scorer_class(EasyScorer):
         return -i/10.
 
 class liz_scorer(EasyScorer):
-    def get_pawn_score(self, i, j):
-        if len(p.move_stack) >= 50:
+    if len(self.p.move_stack) >= 50:
             return 1 + i/10
         else:
-            if i<4:
+            if i<4: 
                 return 1 + i/10
+            else:
+                return 1
