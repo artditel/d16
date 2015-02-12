@@ -13,7 +13,7 @@ def get_scorers():
         "titanic": baseline.titanic(),
         "varya": baseline.varya,
         "varya_scorer_class": baseline.varya_scorer_class(),
-        "Timur": baseline.Timur,
+        "Timur": baseline.Timur_scorer(),
         "liz":baseline.liz_scorer(),
         "grande": baseline.daylight_grande,
     }
