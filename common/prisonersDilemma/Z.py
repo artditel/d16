@@ -2,6 +2,7 @@ stratset = None
 def fair(me, enemy):
 	global stratset
 	if len(enemy) == 99:
+		stratset=None
 		return False
 	if stratset != None:
 		if stratset:
