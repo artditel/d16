@@ -68,6 +68,10 @@ class Position(chess.Bitboard):
                     pieces.append((self.piece_at(8*i + j).symbol(), i, j))
         return pieces
 
+    def get_piece_by_coordinate(self, i, j):
+        return self.piece_at(8*i + j).symbol()
+
+
     def is_white_move(self):
         return self.turn == chess.WHITE
 
