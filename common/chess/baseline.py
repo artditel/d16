@@ -69,22 +69,22 @@ class EasyScorer:
 
 class titanic(EasyScorer):
     def get_pawn_score(self, i, j):
-        if len(p.move_stack) >= 50:
+        if len(self.p.move_stack) >= 50:
             return i**(1/3)
         else:
             return 1
     def get_knight_score(self, i, j):
-        if len(p.move_stack) >= 50:
+        if len(self.p.move_stack) >= 50:
             return 2
         else:
             return 3
     def get_bishop_score(self, i, j):
-        if len(p.move_stack) >= 50:
+        if len(self.p.move_stack) >= 50:
             return 4
         else:
             return 3
     def get_rook_score(self, i, j):
-        if len(p.move_stack) >= 50:
+        if len(self.p.move_stack) >= 50:
             return 6
         else:
             return 5
