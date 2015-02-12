@@ -10,7 +10,7 @@ def get_scorers():
     scorers = {
         "random":   baseline.random_scorer,
         "material": baseline.material_scorer,
-        "titanic": baseline.titanic,
+        "titanic": baseline.titanic(),
         "varya": baseline.varya,
         "varya_scorer_class": baseline.varya_scorer_class(),
         "Timur": baseline.Timur,
