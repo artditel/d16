@@ -172,3 +172,24 @@ class artemka_scorer_class(EasyScorer):
         return 3 + i/9
     def get_pawn_score(self, i, j):
         return 1 + i/12
+
+class az(EasyScorer):
+    def get_pawn_score(self, i, j):
+        if len(self.p.move_stack) <30:
+            return 1-i/10
+        else:
+            return 1+i/10
+    def get_king_score(self, i, j):
+        if len(self.p.move_stack) <27:
+            return -i/10
+        else:
+            return 0
+    def get_knight_score(self, i, j):
+        return 3+i/20
+    def get_bishop_score(self, i, j):
+        return 3+i/20
+    def get_rook_score(self, i, j):
+        return 5+i/20
+    def get_queen_score(self, i, j):
+        return 9+i/20
+
