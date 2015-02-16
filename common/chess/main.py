@@ -35,7 +35,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Chess contest leaderboard program. Use python main.py player1 player2 for their fight')
     parser.add_argument('--rounds', type=int, default=2, help='how many rounds each pair plays')
     parser.add_argument('--quiet',  action='store_true', help='no debug info')
-    parser.add_argument('--random', action='store_true', help='use true random (not for leaderboard)')
+    parser.add_argument('--no_random', action='store_true', help='do not use random (for leaderboard)')
     parser.add_argument('--lister', default="0,5,5",     help='set recursion depths to use. E.g. 0,5,5')
     parser.add_argument(
         'scorers',
@@ -53,7 +53,7 @@ def make_default_player(scorer, lister="0,5,5"):
 
 if __name__ == '__main__':
     parser = parse_args()
-    if not parser.random:
+    if parser.no_random:
         random.seed(1)
 
     players = []

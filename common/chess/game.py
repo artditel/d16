@@ -398,7 +398,7 @@ class Game(object):
                 print('calls :', total_calls)
                 print('in cache :', cached_calls    )
                 print('time  :', total_time)
-                print('speed :', total_calls / total_time)
+                print('speed :', total_calls / total_time if total_time > 0 else 0)
                 print('score :', position_scores[-1])
                 print('\n=========== *** ===========\n')
 
