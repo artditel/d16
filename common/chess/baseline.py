@@ -193,3 +193,26 @@ class az(EasyScorer):
     def get_queen_score(self, i, j):
         return 9+i/20
 
+
+def deep_red(p):
+    s = 0
+    for square in chess.SQUARES:
+        piece = p.piece_at(square)
+        if piece == None:
+            s += -0.01
+            continue
+        s += PIECE_2_SCORE[piece.symbol().lower()] * (2.1 if piece.color == chess.WHITE else -2)
+    for pc, n, e in p.get_pieces():
+        if pc == 'p' or pc == 'P':
+            s += n*0.01
+        if pc == 'r' or pc == 'R':
+            s += n*0.01
+        if pc == 'n' or pc == 'N':
+            s += n*0.012
+        if pc == 'k' or pc == 'K':
+            s += (-n)*0.01
+            for dn, kn, ke in p.get_pieces():
+                if not piece == None and kn-n > 0:
+                    s+=0.02/(kn-n)
+    return s
+
