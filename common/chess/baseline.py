@@ -175,11 +175,6 @@ class artemka_scorer_class(EasyScorer):
         return 1 + i/12
 
 class az(EasyScorer):
-    def get_pawn_score(self, i, j):
-        if len(self.p.move_stack) <30:
-            return 1-i/10
-        else:
-            return 1+i/10
     def get_king_score(self, i, j):
         if len(self.p.move_stack) <27:
             return -i/10
