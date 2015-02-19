@@ -194,7 +194,7 @@ def deep_red(p):
         if piece == None:
             s += -0.012
             continue
-        s += DR_SCORE[piece.symbol().lower()] * (3.05 if piece.color == chess.WHITE else -2.95)
+        s += PIECE_2_SCORE[piece.symbol().lower()] * (3.05 if piece.color == chess.WHITE else -2.95)
     for pc, n, e in p.get_pieces():
         if pc == 'p' or pc == 'P':
             s += n*0.018
@@ -208,5 +208,4 @@ def deep_red(p):
                 if not piece == None and kn-n > 0:
                     s+=0.024/(kn-n)
     return s
-
 
