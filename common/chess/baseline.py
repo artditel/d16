@@ -70,7 +70,7 @@ class EasyScorer:
 class titanic(EasyScorer):
     def get_pawn_score(self, i, j):
         if len(self.p.move_stack) >= 50:
-            return i**(1/3)
+            return i**(1/2)
         else:
             return 1
     def get_knight_score(self, i, j):
