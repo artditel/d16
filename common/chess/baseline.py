@@ -72,22 +72,23 @@ class titanic(EasyScorer):
         if len(self.p.move_stack) >= 50:
             return i**(1/2)
         else:
-            return 1
+            return 1 + i**(1/4)
     def get_knight_score(self, i, j):
         if len(self.p.move_stack) >= 50:
             return 2
         else:
-            return 3
+            return 3 
     def get_bishop_score(self, i, j):
         if len(self.p.move_stack) >= 50:
-            return 4
+            return 4 - (i - j)**(2/5)
         else:
-            return 3
+            return 3 - (i - j)**(2/5)
     def get_rook_score(self, i, j):
         if len(self.p.move_stack) >= 50:
-            return 6
+            return 5,5
         else:
             return 5
+            
 class Timur_scorer(EasyScorer):
     #pieces=p.get_pieces()
     def get_king_score(self, i, j):
