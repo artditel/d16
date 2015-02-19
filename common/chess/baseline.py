@@ -188,10 +188,6 @@ class az(EasyScorer):
         return 3+i/20
     def get_bishop_score(self, i, j):
         return 3+i/20
-    def get_rook_score(self, i, j):
-        return 5+i/20
-    def get_queen_score(self, i, j):
-        return 9+i/20
 
 
 def deep_red(p):
