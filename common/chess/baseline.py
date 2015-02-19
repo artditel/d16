@@ -186,25 +186,27 @@ class az(EasyScorer):
         return 3+i/20
 
 
+
 def deep_red(p):
     s = 0
     for square in chess.SQUARES:
         piece = p.piece_at(square)
         if piece == None:
-            s += -0.01
+            s += -0.012
             continue
-        s += PIECE_2_SCORE[piece.symbol().lower()] * (2.1 if piece.color == chess.WHITE else -2)
+        s += DR_SCORE[piece.symbol().lower()] * (3.05 if piece.color == chess.WHITE else -2.95)
     for pc, n, e in p.get_pieces():
         if pc == 'p' or pc == 'P':
-            s += n*0.01
+            s += n*0.018
         if pc == 'r' or pc == 'R':
-            s += n*0.01
+            s += n*0.024
         if pc == 'n' or pc == 'N':
-            s += n*0.012
+            s += n*0.021
         if pc == 'k' or pc == 'K':
-            s += (-n)*0.01
+            s += (-n)*0.023
             for dn, kn, ke in p.get_pieces():
                 if not piece == None and kn-n > 0:
-                    s+=0.02/(kn-n)
+                    s+=0.024/(kn-n)
     return s
+
 
