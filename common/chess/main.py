@@ -15,7 +15,7 @@ def get_scorers():
         "varya_scorer_class": baseline.varya_scorer_class(),
         "Timur": baseline.Timur_scorer(),
         "liz":baseline.liz_scorer(),
-        "grande": baseline.daylight_grande,
+        "Deep Red": baseline.deep_red,
         "az": baseline.az(),
     }
 
