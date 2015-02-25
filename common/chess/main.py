@@ -3,8 +3,9 @@
 import sys
 import argparse
 import random
-import game
 import baseline
+import game
+import check
 
 def get_scorers():
     scorers = {
@@ -17,6 +18,8 @@ def get_scorers():
         "liz":baseline.liz_scorer(),
         "Deep Red": baseline.deep_red,
         "az": baseline.az(),
+        "az": baseline.az(),
+        "baseline_knn": baseline.KNNChecker([baseline.EasyScorer()]),
     }
 
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
@@ -34,6 +37,7 @@ def run_compare(first, second, rounds=10, verbose=True):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Chess contest leaderboard program. Use python main.py player1 player2 for their fight')
+    parser.add_argument('--predict', action='store_true', help='use prediction file instead of playing game')
     parser.add_argument('--rounds', type=int, default=2, help='how many rounds each pair plays')
     parser.add_argument('--quiet',  action='store_true', help='no debug info')
     parser.add_argument('--no_random', action='store_true', help='do not use random (for leaderboard)')
@@ -52,11 +56,8 @@ def make_default_player(scorer, lister="0,5,5"):
     else:
         return game.DepthWidthMoveFinder(scorer, game.PositionScoreLister(scorer, val_list))
 
-if __name__ == '__main__':
-    parser = parse_args()
-    if parser.no_random:
-        random.seed(1)
 
+def make_players(parser):
     players = []
     scorers = get_scorers()
     names = list(parser.scorers if len(parser.scorers) > 0 else get_scorers().keys())
@@ -69,16 +70,32 @@ if __name__ == '__main__':
             print("unexpected player {}".format(name))
             print("expected: manual or %s" % " ".join(scorers.keys()))
             sys.exit()
-    # players = [make_default_player(scorers['material']), game.DepthWidthMoveFinder(scorers['material'], game.PositionScoreLister(scorers['material'], [0, 10, 10]))]
+    return names, players
 
-
+def calc_results(names, players, parser):
     results = [0] * len(players)
-    for i, p1 in enumerate(players):
-        for j, p2 in enumerate(players[:i]):
-            print("playing {} Vs {}".format(names[i], names[j]))
-            res1, res2 = run_compare(p1, p2, parser.rounds, not parser.quiet)
-            results[i] += res1
-            results[j] += res2
+    if parser.predict:
+        scorers = get_scorers()
+        for i, name in enumerate(names):
+            results[i] = check.check_get_score(scorers[name])
+    else:
+        print("Starting tournament!")
+        for i, p1 in enumerate(players):
+            for j, p2 in enumerate(players[:i]):
+                print("playing {} Vs {}".format(names[i], names[j]))
+                res1, res2 = run_compare(p1, p2, parser.rounds, not parser.quiet)
+                results[i] += res1
+                results[j] += res2
+
+    return results
+
+if __name__ == '__main__':
+    parser = parse_args()
+    if parser.no_random:
+        random.seed(1)
+
+    names, players = make_players(parser)
+    results = calc_results(names, players, parser)
 
     print("")
     print("Leaderboard:")

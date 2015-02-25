@@ -1,7 +1,7 @@
 import game
 from baseline import EasyScorer
 
-FILENAME = "position_scores.txt"
+FILENAME = "test.txt"
 
 def sign(x):
     if x > 0:
@@ -44,5 +44,8 @@ def check_get_score(your_function):
                 incorrect += 1
 
     print("correct share: %.2f%%" % (100. * correct / float(correct + incorrect)))
+    return(100. * correct / float(correct + incorrect))
 
-check_get_score(EasyScorer())
+if __name__ == "__main__":
+    #this line is called in "python check.py" but not in importing check.py
+    check_get_score(EasyScorer())

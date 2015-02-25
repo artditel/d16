@@ -41,6 +41,9 @@ class ScorerWrapper:
             self.cache[pos_hash] = score
         return score
 
+    def __call__(self, p):
+        return self.calc(p)
+
 class Position(chess.Bitboard):
     GREEN = ''
     RED   = ''
@@ -387,8 +390,13 @@ class Game(object):
         while not self.position.is_game_over():
             start  = time.time()
             finder = self.white_finder if self.position.is_white_move() else self.black_finder
-            move, score = finder.find(self.position)
-            self.position.push(move)
+            try:
+                white_move = self.position.is_white_move()
+                move, score = finder.find(self.position)
+                self.position.push(move)
+            except:
+                print("Error while turn calculating. Technical lose.")
+                return (0, 1) if white_move else (1, 0)
             if self.verbose:
                 self.position.print_console()
                 total_calls = finder.scorer.total_calls
