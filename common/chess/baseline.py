@@ -1,5 +1,6 @@
 import random
 import chess
+import game
 
 # ===================================================
 # scorers
@@ -77,7 +78,7 @@ class titanic(EasyScorer):
         if len(self.p.move_stack) >= 50:
             return 2
         else:
-            return 3 
+            return 3
     def get_bishop_score(self, i, j):
         if len(self.p.move_stack) >= 50:
             return 4 - (i - j)**(2/5)
@@ -88,7 +89,7 @@ class titanic(EasyScorer):
             return 5,5
         else:
             return 5
-            
+
 class Timur_scorer(EasyScorer):
     #pieces=p.get_pieces()
     def get_king_score(self, i, j):
@@ -218,4 +219,32 @@ def deep_red(p):
                 if not piece == None and kn-n > 0:
                     s+=0.024/(kn-n)
     return s
+
+def calc_diff(params1, params2):
+    diff = 0
+    for i,j in zip(params1, params2):
+        diff += abs(i - j)
+    return diff
+
+class KNNChecker:
+    def __init__(self, make_params_functions, filename="learn.txt", k=13):
+        self.k = k
+        self.saved_results = []
+        self.make_params_functions = make_params_functions
+        for line in open(filename):
+            fen, score = line.strip().split('\t')[:2]
+            pos = game.Position()
+            pos.set_fen(fen)
+            params = [f(pos) for f in self.make_params_functions]
+            self.saved_results.append((params, int(score)))
+
+    def __call__(self, pos):
+        params = [f(pos) for f in self.make_params_functions]
+        diff_score_pairs = []
+        for other_params, score in self.saved_results:
+            diff_score_pairs.append((calc_diff(other_params, params), score))
+
+        diff_score_pairs.sort(key = (lambda x: x[0]))
+        results = [x[1] for x in diff_score_pairs[:self.k]]
+        return sum(results) / len(results)
 
