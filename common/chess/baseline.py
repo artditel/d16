@@ -157,8 +157,10 @@ class liz_scorer(EasyScorer):
         if len(self.p.move_stack) >= 50:
             return 1 + i/10
         else:
-            if i<4:
+            if i<4 and i<7:
                 return 1 + i/10
+            if i>=7:
+                return 3
             else:
                 return 1
     def get_queen_score(self, i , j):
