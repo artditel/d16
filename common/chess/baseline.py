@@ -184,9 +184,9 @@ class liz_scorer(EasyScorer):
 
 class artemka_scorer_class(EasyScorer):
     def get_queen_score(self, i , j):
-        return 9 + i/4
+        return 3 + i/4
     def get_rook_score(self, i, j):
-        return 5 + i/6
+        return 3 + i/6
     def get_knight_score(self, i, j):
         return 3 + i/9
     def get_bishop_score(self, i, j):
