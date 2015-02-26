@@ -19,6 +19,7 @@ def get_scorers():
         "Deep Red": baseline.deep_red,
         "az": baseline.az(),
         "az": baseline.az(),
+        "artemka_scorer_class": baseline.artemka_scorer_class(), 
         "baseline_knn": baseline.KNNChecker([baseline.EasyScorer()]),
     }
 
