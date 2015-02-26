@@ -198,7 +198,7 @@ class az(EasyScorer):
 
     def get_king_score(self, i, j):
         if len(self.p.move_stack) <27:
-            return -i/10
+            return -i/15
         else:
             return 0
     def get_knight_score(self, i, j):
