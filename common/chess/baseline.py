@@ -218,9 +218,19 @@ DR_SCORE = {
     'k': 0,
 }
 
+
+DR_SCORE = {
+    'p': 1.6,
+    'n': 4.8,
+    'b': 4.9,
+    'r': 8.2,
+    'q': 14.4,
+    'k': 0,
+}
+
 def deep_red(p):
     s = 0
-    name = ("Deep Red, v2.1.5")
+    name = ("Deep Red, v2.1.3")
     for square in chess.SQUARES:
         piece = p.piece_at(square)
         if piece == None:
