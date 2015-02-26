@@ -167,7 +167,10 @@ class liz_scorer(EasyScorer):
     def get_queen_score(self, i , j):
         return 9 + i/4
     def get_rook_score(self, i, j):
-        return 5 + i/6
+        if j>2 and j<7:
+            return 5 + i/6 + j/6
+        else:
+            return 5 + i/6
     def get_knight_score(self, i, j):
         return 3 + i/9
     def get_bishop_score(self, i, j):
