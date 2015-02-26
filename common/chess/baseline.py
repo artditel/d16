@@ -205,6 +205,8 @@ class az(EasyScorer):
         return 3+i/20
     def get_bishop_score(self, i, j):
         return 3+i/20
+    def get_pawn_score(self, i, j):
+        return 1 + i/12
 
 
 DR_SCORE = {
