@@ -210,38 +210,38 @@ class az(EasyScorer):
 
 
 DR_SCORE = {
-    'p': 1.1,
-    'n': 3.1,
-    'b': 3.15,
-    'r': 5.4,
-    'q': 9.5,
+    'p': 1.6,
+    'n': 4.8,
+    'b': 4.9,
+    'r': 8.2,
+    'q': 14.4,
     'k': 0,
 }
 
 def deep_red(p):
     s = 0
+    name = ("Deep Red, v2.1.5")
     for square in chess.SQUARES:
         piece = p.piece_at(square)
         if piece == None:
             s += -0.012
             continue
-        s += DR_SCORE[piece.symbol().lower()] * (2.8 if piece.color == chess.WHITE else -2.8)
+        s += DR_SCORE[piece.symbol().lower()] * (2.8 if piece.color == chess.WHITE else -2.8) * 1.42
     for pc, n, e in p.get_pieces():
         if pc == 'p' or pc == 'P':
             s += n*0.018
         if pc == 'b' or pc == 'B':
             s += 0.01 * max((9 - n - e)*0.57 , (n + e - 9)*0.4 , (e - n)*0.57 , (n - e)*0.4)
         if pc == 'r' or pc == 'R':
-            s += n*0.024
+            s += n*0.027
         if pc == 'n' or pc == 'N':
-            s += n*0.021
+            s += n*0.024
         if pc == 'k' or pc == 'K':
-            s += (-n)*0.023
+            s += (-n)*0.028
             for dn, kn, ke in p.get_pieces():
                 if not piece == None and kn-n > 0:
-                    s+=0.024/(kn-n)
+                    s+=0.02/(kn-n)
     return s
-
 
 
 def calc_diff(params1, params2):
