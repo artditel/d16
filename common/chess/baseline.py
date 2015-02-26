@@ -70,22 +70,22 @@ class EasyScorer:
 
 class titanic(EasyScorer):
     def get_pawn_score(self, i, j):
-        if self.fullmove_number >= 50:
+        if self.p.fullmove_number >= 50:
             return i**(1/2)
         else:
             return 1 + i**(1/4)
     def get_knight_score(self, i, j):
-        if self.fullmove_number >= 50:
+        if self.p.fullmove_number >= 50:
             return 2
         else:
             return 3
     def get_bishop_score(self, i, j):
-        if self.fullmove_number >= 50:
-            return 4 - (1/(i - j)**5)**2
+        if self.p.fullmove_number >= 50:
+            return 4 - (1/(i - j + 0.00001)**5)**2
         else:
-            return 3 - (1/(i - j)**3)**2
+            return 3 - (1/(i - j + 0.00001)**3)**2
     def get_rook_score(self, i, j):
-        if self.fullmove_number >= 50:
+        if self.p.fullmove_number >= 50:
             return 5.5
         else:
             return 5
@@ -198,7 +198,7 @@ class az(EasyScorer):
 
     def get_king_score(self, i, j):
         if len(self.p.move_stack) <27:
-            return -i/10
+            return -i/15
         else:
             return 0
     def get_knight_score(self, i, j):
