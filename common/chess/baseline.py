@@ -81,9 +81,9 @@ class titanic(EasyScorer):
             return 3
     def get_bishop_score(self, i, j):
         if self.p.fullmove_number >= 50:
-            return 4 - (1/(i - j)**5)**2
+            return 4 - (1/(i - j + 0.00001)**5)**2
         else:
-            return 3 - (1/(i - j)**3)**2
+            return 3 - (1/(i - j + 0.00001)**3)**2
     def get_rook_score(self, i, j):
         if self.p.fullmove_number >= 50:
             return 5.5
