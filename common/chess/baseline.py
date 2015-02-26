@@ -171,7 +171,10 @@ class liz_scorer(EasyScorer):
     def get_knight_score(self, i, j):
         return 3 + i/9
     def get_bishop_score(self, i, j):
-        return 3 + i/9
+        if i == j:
+            return 4
+        else:
+            return 3 + i/9
 
 class artemka_scorer_class(EasyScorer):
     def get_queen_score(self, i , j):
