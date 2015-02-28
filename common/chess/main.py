@@ -21,6 +21,7 @@ def get_scorers():
         "az": baseline.az(),
         "artemka_scorer_class": baseline.artemka_scorer_class(), 
         "baseline_knn": baseline.KNNChecker([baseline.EasyScorer()]),
+        "liz_knn": baseline.KNNChecker([baseline.EasyScorer(),baseline.liz_scorer(),baseline.az(),baseline.artemka_scorer_class(),baseline.deep_red,baseline.varya_scorer_class(),baseline.Timur_scorer()]),
     }
 
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
