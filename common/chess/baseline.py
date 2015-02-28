@@ -210,44 +210,34 @@ class az(EasyScorer):
 
 
 DR_SCORE = {
-    'p': 1.6,
-    'n': 4.8,
-    'b': 4.9,
-    'r': 8.2,
-    'q': 14.4,
+    'p': 1.57,
+    'n': 4.74,
+    'b': 4.93,
+    'r': 7.57,
+    'q': 16.00,
     'k': 0,
 }
 
-
-DR_SCORE = {
-    'p': 1.6,
-    'n': 4.8,
-    'b': 4.9,
-    'r': 8.2,
-    'q': 14.4,
-    'k': 0,
-}
-
-def deep_red(p):
+def Deep_red(p):
     s = 0
-    name = ("Deep Red, v2.1.3")
+    name = ("Deep Red ™, v2.2.4")
+    env = ("This scorer was developed by DeepConscience® and introduced on 28.02.2015," , "All rights reserved")
     for square in chess.SQUARES:
         piece = p.piece_at(square)
         if piece == None:
-            s += -0.012
             continue
-        s += DR_SCORE[piece.symbol().lower()] * (2.8 if piece.color == chess.WHITE else -2.8) * 1.42
+        s += DR_SCORE[piece.symbol().lower()] * (1 if piece.color == chess.WHITE else -1) * 3.949
     for pc, n, e in p.get_pieces():
         if pc == 'p' or pc == 'P':
-            s += n*0.018
+            s += n*0.018 + 0.00016
         if pc == 'b' or pc == 'B':
-            s += 0.01 * max((9 - n - e)*0.57 , (n + e - 9)*0.4 , (e - n)*0.57 , (n - e)*0.4)
+            s += 0.016 * max((9 - n - e)*0.57 , (n + e - 9)*0.4 , (e - n)*0.57 , (n - e)*0.4) + 0.00049
         if pc == 'r' or pc == 'R':
-            s += n*0.027
+            s += n*0.085 + 0.00076
         if pc == 'n' or pc == 'N':
-            s += n*0.024
+            s += n*0.02 + 0.00047
         if pc == 'k' or pc == 'K':
-            s += (-n)*0.028
+            s += (-n)*0.33
             for dn, kn, ke in p.get_pieces():
                 if not piece == None and kn-n > 0:
                     s+=0.02/(kn-n)
