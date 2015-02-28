@@ -181,6 +181,11 @@ class liz_scorer(EasyScorer):
             return 4
         else:
             return 3 + i/9
+    def get_king_score(self, i, j):
+        if len(self.p.move_stack) < 50:
+            return -i/10
+        else:
+            return 0
 
 class artemka_scorer_class(EasyScorer):
     def get_queen_score(self, i , j):
