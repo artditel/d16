@@ -155,20 +155,23 @@ class varya_scorer_class(EasyScorer):
 
 class liz_scorer(EasyScorer):
     def get_pawn_score(self, i, j):
-        if len(self.p.move_stack) >= 50:
+        if i<4:
             return 1 + i/10
+        if i == 4:
+            return 1.3
+        if i == 5:
+           return 1.5
+        if i == 6:
+            return 3
+        if i>=7:
+            return 3.5
         else:
-            if i<4 and i<7:
-                return 1 + i/10
-            if i>=7:
-                return 3
-            else:
-                return 1
+            return 1
     def get_queen_score(self, i , j):
         if j>2 and j<7:
-            return 9 + i/4 + j/4
+            return 1 + i/6 + j/6
         else:
-            return 9 + i/4
+            return 1 + i/6
     def get_rook_score(self, i, j):
         if j>2 and j<7:
             return 5 + i/6 + j/6
@@ -178,14 +181,21 @@ class liz_scorer(EasyScorer):
         return 3 + i/9
     def get_bishop_score(self, i, j):
         if i == j:
-            return 4
+            return 3.8
         else:
-            return 3 + i/9
+            return 3.5 + i/10
     def get_king_score(self, i, j):
-        if len(self.p.move_stack) < 50:
-            return -i/10
-        else:
-            return 0
+        return -i/5
+
+class lizz(EasyScorer):
+    def get_king_score(self, i, j):
+        return -i/10
+    def get_knight_score(self, i, j):
+        return 3+i/10
+    def get_bishop_score(self, i, j):
+        return 3.3+i/20
+    def get_pawn_score(self, i, j):
+        return 1 + i/13
 
 class artemka_scorer_class(EasyScorer):
     def get_queen_score(self, i , j):
