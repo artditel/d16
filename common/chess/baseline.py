@@ -233,7 +233,7 @@ DR_SCORE = {
     'k': 0,
 }
 
-def Deep_red(p):
+def deep_red(p):
     s = 0
     name = ("Deep Red ™, v2.2.4")
     env = ("This scorer was developed by DeepConscience® and introduced on 28.02.2015," , "All rights reserved")
