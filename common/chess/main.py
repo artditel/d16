@@ -16,12 +16,13 @@ def get_scorers():
         "varya_scorer_class": baseline.varya_scorer_class(),
         "Timur": baseline.Timur_scorer(),
         "liz":baseline.liz_scorer(),
+        "lizz":baseline.lizz(),
         "Deep Red": baseline.deep_red,
         "az": baseline.az(),
         "az": baseline.az(),
         "artemka_scorer_class": baseline.artemka_scorer_class(), 
         "baseline_knn": baseline.KNNChecker([baseline.EasyScorer()]),
-        "liz_knn": baseline.KNNChecker([baseline.EasyScorer(),baseline.liz_scorer(),baseline.az(),baseline.artemka_scorer_class(),baseline.deep_red,baseline.varya_scorer_class(),baseline.Timur_scorer()]),
+        "liz_knn": baseline.KNNChecker([baseline.EasyScorer(),baseline.lizz(),baseline.liz_scorer(),baseline.az(),baseline.artemka_scorer_class(),baseline.varya_scorer_class(),baseline.Timur_scorer()]),
     }
 
     return {name: game.ScorerWrapper(scorer) for name, scorer in scorers.items()}
