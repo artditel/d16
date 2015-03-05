@@ -70,22 +70,19 @@ class EasyScorer:
 
 class titanic(EasyScorer):
     def get_pawn_score(self, i, j):#пешка
-        if self.p.fullmove_number >= 50:
-            return i**(1/3)
-        else:
-            return 1 + i**(1/5)
+        return i**(1/3) + (self.p.fullmove_number)/35
     def get_knight_score(self, i, j):#конь
-        return 3 - (self.p.fullmove_number)/50
+        return 3 - (self.p.fullmove_number)/35
     def get_bishop_score(self, i, j):#слон
-        return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/50
+        return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/35
     def get_rook_score(self, i, j):#ладья
-        if self.p.fullmove_number >= 50:
+        if self.p.fullmove_number >= 35:
             return 5.5 + empty_column(self, p, i, j)
         else:
             return 5 + empty_column(self, p, i, j)
         def empty_column(self, p, i, j):
-            for i in range(8):
-                if self.piece_at(8*i + j) is not None:
+            for k in range(8):
+                if self.piece_at(8*k + j) is not None and k != i:
                     return 0
             return 1/3
             
