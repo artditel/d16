@@ -80,10 +80,15 @@ class titanic(EasyScorer):
         return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/50
     def get_rook_score(self, i, j):#ладья
         if self.p.fullmove_number >= 50:
-            return 5.5
+            return 5.5 + empty_column(self, p, i, j)
         else:
-            return 5
-
+            return 5 + empty_column(self, p, i, j)
+        def empty_column(self, p, i, j):
+            for i in range(8):
+                if self.piece_at(8*i + j) is not None:
+                    return 0
+            return 1/3
+            
 class Timur_scorer(EasyScorer):
     #pieces=p.get_pieces()
     def get_king_score(self, i, j):
