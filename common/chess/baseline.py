@@ -76,15 +76,16 @@ class titanic(EasyScorer):
     def get_bishop_score(self, i, j):#слон
         return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/35
     def get_rook_score(self, i, j):#ладья
-        if self.p.fullmove_number >= 35:
-            return 5.5 + empty_column(self, p, i, j)
-        else:
-            return 5 + empty_column(self, p, i, j)
         def empty_column(self, p, i, j):
             for k in range(8):
                 if self.piece_at(8*k + j) is not None and k != i:
                     return 0
-            return 1/3
+            return 1/3        
+        if self.p.fullmove_number >= 35:
+            return 5.5 + empty_column(self, p, i, j)
+        else:
+            return 5 + empty_column(self, p, i, j)
+
             
 class Timur_scorer(EasyScorer):
     #pieces=p.get_pieces()
