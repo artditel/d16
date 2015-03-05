@@ -283,3 +283,12 @@ class KNNChecker:
         results = [x[1] for x in diff_score_pairs[:self.k]]
         return sum(results) / len(results)
 
+def elephants(p):
+	k=0
+	for pc, n, s in p.get_pieces():
+		if pc =="b":
+			k+=1
+		if pc =="B":
+			k+=-1
+	k=k*3
+	return k
