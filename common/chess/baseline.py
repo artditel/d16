@@ -75,15 +75,9 @@ class titanic(EasyScorer):
         else:
             return 1 + i**(1/5)
     def get_knight_score(self, i, j):#конь
-        if self.p.fullmove_number >= 50:
-            return 2
-        else:
-            return 3
+        return 3 - (self.p.fullmove_number)/50
     def get_bishop_score(self, i, j):#слон
-        if self.p.fullmove_number >= 50:
-            return 4 - (1/(i - j + 0.00001)**5)**2
-        else:
-            return 3 - (1/(i - j + 0.00001)**3)**2
+        return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/50
     def get_rook_score(self, i, j):#ладья
         if self.p.fullmove_number >= 50:
             return 5.5
