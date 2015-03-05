@@ -75,8 +75,8 @@ class titanic(EasyScorer):
         return 3 - (self.p.fullmove_number)/35
     def get_bishop_score(self, i, j):#слон
         return 3 - (1/(i - j + 0.00001)**3)**2 + (self.p.fullmove_number)/35
-    def get_rook_score(self, i, j):#ладья
-        def empty_column(self, p, i, j):
+    def get_rook_score(self, i, j, p):#ладья
+        def empty_column(self, i, j):
             for k in range(8):
                 if self.piece_at(8*k + j) is not None and k != i:
                     return 0
