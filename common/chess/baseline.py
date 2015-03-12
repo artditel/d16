@@ -220,7 +220,20 @@ class az(EasyScorer):
         return 3.2+i/18
     def get_pawn_score(self, i, j):
         return 1 + i/13
+    def get_rook_score(self, i, j):
+        return 5
 
+class RTNM(EasyScorer):
+    def get_queen_score(self, i , j):
+        return 3 + i/4
+    def get_knight_score(self, i, j):
+        return 2.8+i/7.5
+    def get_bishop_score(self, i, j):
+        return 3.3+i/20
+    def get_king_score(self, i, j):
+        return -i/10
+    def get_pawn_score(self, i, j):
+        return 1+0.5/((5-i)**2+1)
 
 DR_SCORE = {
     'p': 1.57,
