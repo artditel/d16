@@ -220,8 +220,6 @@ class az(EasyScorer):
         return 3.2+i/18
     def get_pawn_score(self, i, j):
         return 1 + i/13
-    def get_rook_score(self, i, j):
-        return 5
 
 
 DR_SCORE = {
