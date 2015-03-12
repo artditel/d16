@@ -213,13 +213,15 @@ class az(EasyScorer):
         if len(self.p.move_stack) <27:
             return -i/15
         else:
-            return 0
+            return
     def get_knight_score(self, i, j):
-        return 3+i/9
+        return 2.8+i/7.5
     def get_bishop_score(self, i, j):
         return 3.2+i/18
     def get_pawn_score(self, i, j):
         return 1 + i/13
+    def get_rook_score(self, i, j):
+        return 5
 
 
 DR_SCORE = {
