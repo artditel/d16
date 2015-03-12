@@ -217,11 +217,9 @@ class az(EasyScorer):
     def get_knight_score(self, i, j):
         return 2.8+i/7.5
     def get_bishop_score(self, i, j):
-        return 3.2+i/18
+        return 3.2+i/18.5
     def get_pawn_score(self, i, j):
         return 1 + i/13
-    def get_rook_score(self, i, j):
-        return 5
 
 class RTNM(EasyScorer):
     def get_queen_score(self, i , j):
