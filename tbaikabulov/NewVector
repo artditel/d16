@@ -1,0 +1,499 @@
+import tkinter
+import sys
+import random
+import math
+import par
+def distance (x1,y1,x2,y2):
+    return ((x1-x2)**2+(y1-y2)**2)**0.5
+x_=0
+y_=0
+way=1
+WIDTH=1300
+HEIGHT=700
+w,h=WIDTH,HEIGHT
+FPS = 100
+min_stiffness=0.000001
+max_stiffness=0.001
+
+meet=[0,0]
+standart_Rad_of_ball=6
+FIELD_COLOR='Lime green'
+BORDER_COLOR='Dark green'
+from tkinter import *
+root = Tk()
+menubar = Menu(root)
+COLORS=['Lavender','Moccasin','Yellow','Gold','Thistle','Crimson','MediumBlue','Red','Black','Brown','Salmon','Olive','SandyBrown','Goldenrod','ForestGreen','MediumAquamarine','SteelBlue']
+FADES=['gray1', 'gray2', 'gray3', 'gray4', 'gray5', 'gray6', 'gray7', 'gray8', 'gray9', 'gray10',
+    'gray11', 'gray12', 'gray13', 'gray14', 'gray15', 'gray16', 'gray17', 'gray18', 'gray19',
+    'gray20', 'gray21', 'gray22', 'gray23', 'gray24', 'gray25', 'gray26', 'gray27', 'gray28',
+    'gray29', 'gray30', 'gray31', 'gray32', 'gray33', 'gray34', 'gray35', 'gray36', 'gray37',
+    'gray38', 'gray39', 'gray40', 'gray42', 'gray43', 'gray44', 'gray45', 'gray46', 'gray47',
+    'gray48', 'gray49', 'gray50', 'gray51', 'gray52', 'gray53', 'gray54', 'gray55', 'gray56',
+    'gray57', 'gray58', 'gray59', 'gray60', 'gray61', 'gray62', 'gray63', 'gray64', 'gray65',
+    'gray66', 'gray67', 'gray68', 'gray69', 'gray70', 'gray71', 'gray72', 'gray73', 'gray74',
+    'gray75', 'gray76', 'gray77', 'gray78', 'gray79', 'gray80', 'gray81', 'gray82', 'gray83',
+    'gray84', 'gray85', 'gray86', 'gray87', 'gray88', 'gray89', 'gray90', 'gray91', 'gray92',
+    'gray93', 'gray94', 'gray95', 'gray97', 'gray98', 'gray99']
+FADES=FADES[-1::-1]
+class Gamee:
+    koeff=1/60
+    PAUSE=True
+    standart_Radius=9
+    chosen_Radius=standart_Radius
+    standart_stiffness=(max_stiffness+min_stiffness)/2
+    chosen_stiffness=standart_stiffness
+    chosen_Balls=[]
+    create_ball_active=False
+    create_rope_active=False
+    create_spring_active=False
+    g=0
+    G=1/100
+    def __init__(self,balls,springs,ropes,spokes):
+            self.balls=balls
+            self.springs=springs
+            self.ropes=ropes
+            self.spokes=spokes     
+    def E(self):
+        E_k = sum([(b.v.x**2+b.v.y**2)/2 for b in self.balls])
+        E_p=0
+        E_p += sum([(HEIGHT-b.y)*self.g*(b.m if b.m!='inf' else 0) for b in self.balls])
+        E_p += sum([s.E() for s in self.springs])
+        for i in range(0,len(self.balls)):
+            for j in range(0,len(self.balls)):
+                if i < j:
+                    b1=self.balls[i]
+                    b2=self.balls[j]
+                    E_p+=-self.G*b1.m*b2.m/b1.distance(b2)
+        return E_k+E_p
+def change(v0,m0,v1,m1):
+    u0=(2*m1*v1+v0*(m0-m1))/(m0+m1)
+    u1=(2*m0*v0+v1*(m1-m0))/(m0+m1)
+    return(u0,u1)
+def change2(v,u,cos,sin,m1,m2):
+    ix=-(v.y*cos-v.x*sin)*sin+change(v.y*sin+v.x*cos,m1,u.y*sin+u.x*cos,m2)[0]*cos
+    iy=(v.y*cos-v.x*sin)*cos+change(v.y*sin+v.x*cos,m1,u.y*sin+u.x*cos,m2)[0]*sin
+    jx=-(u.y*cos-u.x*sin)*sin+change(v.y*sin+v.x*cos,m1,u.y*sin+u.x*cos,m2)[1]*cos
+    jy=(u.y*cos-u.x*sin)*cos+change(v.y*sin+v.x*cos,m1,u.y*sin+u.x*cos,m2)[1]*sin
+    return(ix,iy,jx,jy)
+class Vector:
+    def __init__(self,x,y):
+            self.x=x
+            self.y=y
+    def __add__(self,other):
+        if type(other)==Vector:
+            return Vector(self.x+other.x,self.y+other.y)
+        if type(other)==Ball:
+            return Ball(other.x+self.x,other.y+self.y,other.v,other.m,other.fill,other.R)
+    def __sub__(self, other):
+        if type(other)==Vector:
+            return Vector(self.x-other.x,self.y-other.y)
+        if type(other)==Ball:
+            return Ball(other.x-self.x,other.y-self.y,other.v,other.m,other.fill,other.R)
+    def __mul__(self,k):
+        return Vector(self.x*k,self.y*k)
+    def __truediv__(self,k):
+            return Vector(self.x/k,self.y/k)    
+    
+    def proj(self,a):
+        cos=abs(math.cos(a))
+        sin=abs(math.sin(a))
+        return Vector( (self.x*cos-self.y*sin)*cos,(self.x*cos-self.y*sin)*sin)
+    def __abs__(self):
+        return (self.x**2+self.y**2)**0.5
+    def __pow__(self,k):
+        return Vector(self.x**k,self.y**k) 
+class Ball:
+    force=Vector(0,0)
+    impregnability=0
+    def __init__(self,x,y,v,m,R,fill):
+        self.x=x
+        self.y=y
+        self.v=v
+        self.m=m
+        self.fill=fill
+        self.R=R
+    def vec_to(self,b):
+        return Vector(b.x-self.x,b.y-self.y)
+    def vec_to_line(self,x1,y1,x2,y2):
+        sin=(y2-y1)/distance(x1,y1,x2,y2)
+        cos=(x2-x1)/distance(x1,y1,x2,y2)
+        s=((y1-y2)*self.x+(x2-x1)*self.y+(x1*y2-y1*x2))/( (x2-x1)**2+(y1-y2)**2)**0.5
+        return Vector(s*sin,-s*cos)    
+    def distance(self,other):
+        return ((self.x-other.x)**2+(self.y-other.y)**2)**0.5
+    def distance_next(self,other):
+        x1=self.x+self.v.x*ko+self.force.x*(0.5/self.m)*ko
+        x2=other.x+other.v.x*ko+other.force.y*(0.5/other.m)*ko
+        y1=self.y+self.v.y*ko+self.force.x*(0.5/self.m)*ko
+        y2=other.y+other.v.y*ko+other.force.y*(0.5/other.m)*ko        
+        return distance(x1,y1,x2,y2) 
+    def E(self):
+        return ((self.v.x**2+self.v.y**2)/2+(HEIGHT-self.y)*Game.g)*(self.m if self.m!='inf' else 0)
+    def normal_distance(self,other):
+        sin=(other.y-self.y)/self.distance(other)
+        cos=(other.x-self.x)/self.distance(other)
+        return Vector( (self.R+other.R)*cos,(self.R+other.R)*sin)
+    def __add__(self,other):
+        return Ball(self.x+other.x,self.y+other.y,self.v,self.m,self.fill,self.R)  
+class Spring:
+    def __init__(self,length,stiffness,B1,B2):
+                self.length=length
+                self.stiffness=stiffness
+                self.b1=B1
+                self.b2=B2
+    def force(self):
+                return abs(self.b1.distance(self.b2)- self.length) * self.stiffness
+    def E(self):
+        return (self.b1.distance(self.b2)- self.length)**2 * self.stiffness*0.5
+class Rope:
+    def __init__(self,length,b1,b2):
+            self.length=length
+            self.b1=b1
+            self.b2=b2
+    def force(self):
+            return (self.b1.distance(self.b2)- self.length*1.05)*bool(self.b1.distance(self.b2)- self.length*1.05>0)*0.01
+class Spoke:
+    def __init__(self,x1,y1,x2,y2,Balls):
+                self.x1=x1
+                self.y1=y1
+                self.x2=x2
+                self.y2=y2
+                self.Balls=Balls
+def draw_field(canvas,game):
+    canvas.delete(*canvas.find_all())
+    canvas.create_rectangle(0,0,WIDTH, HEIGHT, fill=BORDER_COLOR)
+    canvas.create_rectangle(5,5,WIDTH-5, HEIGHT-5, fill=FIELD_COLOR)
+    if Game.create_ball_active==True and x_*y_!=0:
+        r=Game.chosen_Radius
+        canvas.create_oval(x_-r,y_-r,x_+r,y_+r,fill='red')
+    for b in game.balls:
+        canvas.create_oval(b.x-b.R,b.y-b.R,b.x+b.R,b.y+b.R, fill=b.fill)
+    if Game.create_rope_active and len(Game.chosen_Balls)==1:
+        canvas.create_line(x_,y_,Game.chosen_Balls[0].x,Game.chosen_Balls[0].y) 
+    if Game.create_spring_active and len(Game.chosen_Balls)==1:
+        k=str((Game.chosen_stiffness-min_stiffness)/(max_stiffness-min_stiffness)*97/100)
+        k1=str((Game.chosen_stiffness-min_stiffness)/(max_stiffness-min_stiffness))
+        canvas.create_line(x_,y_,Game.chosen_Balls[0].x,Game.chosen_Balls[0].y,width=1+(int(k1[2]+k1[3]))*4/100,fill=FADES[int(k[2]+k[3])])     
+    for s in game.springs:
+        k=str((s.stiffness-min_stiffness)/(max_stiffness-min_stiffness)*97/100)+'0'*5
+        k1=str((s.stiffness-min_stiffness)/(max_stiffness-min_stiffness))+'0'*5
+        canvas.create_line(s.b1.x,s.b1.y,s.b2.x,s.b2.y,width=1+(int(k1[2]+k1[3]))*4/100,fill=FADES[int(k[2]+k[3])])
+    for r in game.ropes:
+        if r.b1.distance(r.b2)>=r.length:
+            canvas.create_line(r.b1.x,r.b1.y,r.b2.x,r.b2.y)
+        else:
+            if r.b2.x>r.b1.x:
+                par.draw_rope(r.b1.x,r.b1.y,r.b2.x,r.b2.y, r.length,canvas)
+            if  r.b1.x>r.b2.x:
+                par.draw_rope(r.b2.x,r.b2.y,r.b1.x,r.b1.y, r.length,canvas)
+    for sp in game.spokes:
+        canvas.create_line(sp.x1,sp.y1,sp.x2,sp.y2, width=1)
+        for j in sp.Balls:
+            canvas.create_line(j.x,j.y,j.x+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).x,j.y+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).y)
+            canvas.create_oval(j.x+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).x+3,j.y+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).y+3,j.x+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).x-3,j.y+j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2).y-3)
+            c.create_text(100,100,text=str(abs(j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2))))
+    x=str(sum([b.E() for b in game.balls])       +sum ([s.E() for s in game.springs])               )+'0'*7
+    x=str(game.E())+'0'*7
+    c.create_text(100,200,text='Energy of system: '+x[0:9])
+    c.create_text(100,300,text=str(meet))
+    c.create_text(100,400,text=str(game.chosen_stiffness),fill='red')
+def make_move(game,c):
+    global meet
+    global Game
+    t=game.koeff
+    for r in game.ropes:
+        if (r.b1).distance(r.b2)>r.length:
+            cos=(r.b2.x-r.b1.x)/r.b1.distance(r.b2)
+            sin=(r.b2.y-r.b1.y)/r.b1.distance(r.b2)
+            v1r=r.b1.v.x/cos+r.b1.v.y/sin
+            v2r=r.b2.v.x/cos+r.b2.v.y/sin
+            u=(v1r*r.b1.m+v2r*r.b2.m)/(r.b1.m+r.b2.m)
+            r.b1.v+=Vector( (u-v1r)*cos,(u-v1r)*sin)
+            r.b2.v+=Vector( (u-v2r)*cos,(u-v2r)*sin)
+            
+    for b in game.balls:
+        if b.m!='inf':
+            b.force+=Vector(0,Game.g*b.m)
+        if not b.R<b.x+b.v.x*t<WIDTH-b.R:
+            meet[0]+=1
+            b.v+=Vector(-2*b.v.x,0)
+        if not b.R<b.y+b.v.y*t<HEIGHT-b.R:
+            meet[0]+=1
+            b.v+=Vector(0,-2*b.v.y)
+    for s in game.springs:
+        s.b1.force += s.b1.vec_to(s.b2)*(1/s.b1.distance(s.b2))*s.force()
+        s.b2.force += s.b2.vec_to(s.b1)*(1/s.b1.distance(s.b2))*s.force()
+    for sp in game.spokes:
+        for j in sp.Balls:
+            j.force+=j.vec_to_line(sp.x1,sp.y1,sp.x2,sp.y2)
+    for i in range(0,len(game.balls)):
+        for j in range(0,len(game.balls)):
+            b1=game.balls[i]
+            b2=game.balls[j]
+            if i<j and b1.impregnability==0 and b2.impregnability==0 and b1.m!='inf' and b2.m!='inf':
+                b1.force += b1.vec_to(b2) * Game.G * b1.m * b2.m /b1.distance(b2) ** 2
+                b2.force += b2.vec_to(b2) * Game.G * b2.m * b1.m /b2.distance(b1) ** 2
+                if (b1.v+b1).distance(b2.v+b2)<(b1.R+b2.R):
+                    activ=2
+                if (b1+b1.v).distance(b2+b2.v)<(b1.R+b2.R):
+                    meet[1]+=1
+                    if way==0:
+                        b1.force += (b1.vec_to(b2)+b1.normal_distance(b2) )*(-1/30)
+                        b2.force += (b1.vec_to(b1)+b2.normal_distance(b1) )*(-1/30)
+                    else:
+                        k=b1.distance(b2)
+                        change=change2(b1.v,b2.v,(b2.x-b1.x)/k,(b2.y-b1.y)/k,b1.m,b2.m)
+                        b1.v.x,b1.v.y,b2.v.x,b2.v.y=change[0],change[1],change[2],change[3]
+def change_system(game,c):
+    global Game
+    t=game.koeff    
+    for b in game.balls:
+        if b.m!='inf':
+            b.v+=b.force*t*(1/b.m)
+            b.force=Vector(0,0)
+            b.x+=b.v.x*t
+            b.y+=b.v.y*t-Game.g*t**2/2    
+if __name__ == "__main__":
+    c = tkinter.Canvas(width=WIDTH, height=HEIGHT)
+    c.pack()
+    c.focus_set()
+def loop():
+    global Game
+    draw_field(c, Game)
+    if not Game.PAUSE:
+        for i in range(int(1/Game.koeff)):
+            make_move(Game,c)
+            change_system(Game,c)
+        #print(create_ball_active,x_,y_)
+    c.after(1000// FPS, loop)
+A=Ball(w/2-200,h/2-200,             Vector(1,1),'inf',5,'Orange')
+B=Ball(w/2+200,h/2-200,             Vector(0,0),'inf',5,'red')
+C=Ball(w/2-200,h/2+200,             Vector(0,0),'inf',5,'white')
+D=Ball(w/2+200,h/2+200,             Vector(0,0),'inf',5,'orange')
+E=Ball(w/2-300,h/2,       Vector(1,2),5,15,'black')
+F=Ball(w/2,h/2,             Vector(0,0),4,15,'yellow')
+I=Ball(w/2+300,h/2,         Vector(0,0),1,6,'red')
+Game=Gamee([E,F],[],[],[])
+
+def donothing():
+    filewin = Toplevel(root,height=67)
+    button = Button(filewin, text="Do nothing button")   
+    button.pack()
+def nothing():
+    filewin = Toplevel(root,width=20,height=50)
+    text = Entry(filewin,width=20)
+    text.pack()
+    # Перевести курсор в поле ввода
+    text.focus_set()
+    # Теперь кнопка поддерживает ЛКМ, пробел
+    button = Button(filewin, text="Ввести и выйти", width=20, command=print (text.get()))
+    # Теперь кнопка поддерживает Enter
+    button.bind('<Return>', lambda e:print (text.get()))   
+    button.pack()
+def getXY(event):
+    global x_
+    global y_
+    getx=event.x        #координата x сохраняется в переменной getx
+    gety=event.y        #y  соответственно в gety
+    x_,y_=getx,gety
+def create_ball_activ():
+    global Game
+    Game.create_ball_active=True
+    Game.create_rope_active=False
+    Game.create_spring_active=False
+    Game.chosen_Radius=Game.standart_Radius
+def create_rope_activ():
+    global Game
+    Game.create_rope_active=True
+    Game.create_ball_active=False
+    Game.create_spring_active=False
+def create_spring_activ():
+    global Game
+    Game.create_rope_active=False
+    Game.create_ball_active=False
+    Game.create_spring_active=True
+def Create_Object(event):
+    global Game
+    a=random.random()*2-1
+    b=random.random()*2-1
+    if Game.create_ball_active:
+        Game.balls.append(Ball(event.x,event.y,     Vector(a,b),1,Game.chosen_Radius,random.choice(COLORS)))
+    if Game.create_rope_active or Game.create_spring_active:
+        B=Game.chosen_Balls
+        for b in Game.balls:
+            if distance(event.x,event.y,b.x,b.y)<b.R:
+                Game.chosen_Balls.append(b)
+                break
+        if len(B)==2:
+            if Game.create_rope_active:
+                Game.ropes.append(Rope(B[0].distance(B[1]),B[0],B[1]))
+            if Game.create_spring_active:
+                Game.springs.append(Spring(B[0].distance(B[1])*0.9,Game.chosen_stiffness,B[0],B[1]))
+            Game.chosen_Balls=[]
+        
+            
+def change_parametres(event):
+    global Game
+    if Game.create_ball_active and Game.chosen_Radius+event.delta/60>1:
+        Game.chosen_Radius+=event.delta/60
+    if Game.create_spring_active and 0.000001<Game.chosen_stiffness+event.delta/10000000<0.001:
+        Game.chosen_stiffness+=event.delta/10000000
+def start_game():
+    global Game
+    Game.PAUSE=False
+def stop_game():
+    global Game
+    Game.PAUSE=True
+def change_state(event):
+    global Game
+    Game.PAUSE=not Game.PAUSE   
+def new_game():
+    global Game
+    global meet
+    Game=Gamee([],[],[],[])
+    meet=[0,0]
+def deactivate(event):
+    global Game
+    Game.create_ball_active=False
+    Game.create_rope_active=False
+    Game.chosen_Balls=[]
+    Game.chosen_Radius=Game.standart_Radius
+def change_constants():
+    global root1
+    global Entry1
+    global Entry2
+    root1=Tk()
+    x = (root1.winfo_screenwidth() - root1.winfo_reqwidth()) / 2
+    y = (root1.winfo_screenheight() - root1.winfo_reqheight()) / 2
+    root1.wm_geometry("+%d+%d" % (x, y))    
+    Entry1=Entry(root1)
+    Entry2=Entry(root1)
+    Entry1.grid(row=0,column=1)
+    Entry2.grid(row=1,column=1)
+    Label1=Label(root1,text='g = ').grid(row=0,column=0)
+    Label2=Label(root1,text='G = ').grid(row=1,column=0)
+    Label2=Label(root1,text='G = ').grid(row=1,column=0)
+    Button1=Button(root1,text='Enter',command=quit)
+    Button1.grid(row=2,column=1,columnspan=1)
+    root1.mainloop()
+def quit():
+    global Game
+    text1,text2=Entry1.get(),Entry2.get()
+    root1.destroy()
+    Game.g=int(text1)
+    Game.G=int(text2)
+def create_ball():
+    global root1
+    global Entry1
+    global Entry2
+    global Entry3
+    global Entry4
+    global Entry5
+    global Entry6    
+    root1=Tk()
+    x = (root1.winfo_screenwidth() - root1.winfo_reqwidth()) / 2
+    y = (root1.winfo_screenheight() - root1.winfo_reqheight()) / 2
+    root1.wm_geometry("+%d+%d" % (x, y))    
+    Entry1=Entry(root1)
+    Entry1.grid(row=0,column=1)
+    Entry2=Entry(root1)
+    Entry2.grid(row=1,column=1)
+    Entry3=Entry(root1)
+    Entry3.grid(row=2,column=1) 
+    Entry4=Entry(root1)
+    Entry4.grid(row=3,column=1)
+    Entry5=Entry(root1)
+    Entry5.grid(row=4,column=1)
+    Entry6=Entry(root1)
+    Entry6.grid(row=5,column=1)      
+    Label1=Label(root1,text='x = ').grid(row=0,column=0)
+    Label2=Label(root1,text='y = ').grid(row=1,column=0)
+    Label3=Label(root1,text='vx = ').grid(row=2,column=0)
+    Label4=Label(root1,text='vy = ').grid(row=3,column=0)
+    Label5=Label(root1,text='mass = ').grid(row=4,column=0)
+    Label6=Label(root1,text='radius = ').grid(row=5,column=0)    
+    Button1=Button(root1,text='Create',command=quit1).grid(row=6,column=0)
+    Button2=Button(root1,text='Cancel',command=quit1).grid(row=6,column=1)  
+    root1.mainloop()
+def cancel():
+    root1.destroy()
+def quit1():
+    global Game
+    try:
+        text1=int(Entry1.get())
+        text2=int(Entry2.get())
+        text3=int(Entry3.get())
+        text4=int(Entry4.get())
+        text5=int(Entry5.get())
+        text6=int(Entry6.get())    
+        Game.balls.append(Ball(text1,text2,Vector(text3,text4),text5,text6,'red'))
+    except:
+        pass
+    finally:
+        root1.destroy()
+    
+c.bind('<Motion>',getXY)
+c.bind('<Button-1>',Create_Object)
+c.bind('<MouseWheel>',change_parametres)
+c.bind('<Button-3>',deactivate)
+c.bind("<space>", change_state)
+
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="New", command=new_game)
+filemenu.add_command(label="Open", command=nothing)
+filemenu.add_command(label="Save", command=donothing)
+filemenu.add_command(label="Save as...", command=donothing)
+filemenu.add_command(label="Close", command=donothing)
+
+filemenu.add_separator()
+
+filemenu.add_command(label="Exit", command=root.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+
+gamemenu = Menu(menubar, tearoff=0)
+gamemenu.add_command(label="Start", command=start_game)
+gamemenu.add_command(label="Pause", command=stop_game)
+gamemenu.add_command(label="Change constants", command=change_constants)
+menubar.add_cascade(label="Game", menu=gamemenu)
+
+
+
+ballmenu = Menu(menubar, tearoff=0)
+ballmenu.add_command(label="coordinates...", command=create_ball)
+ballmenu.add_command(label="with mouse...", command=create_ball_activ)
+ballmenu.add_command(label="on the spoke...", command=create_ball_activ)
+ballmenu.add_command(label="random...", command=create_ball_activ)
+menubar.add_cascade(label="Ball", menu=ballmenu)
+
+springmenu = Menu(menubar, tearoff=0)
+springmenu.add_command(label="between balls...", command=create_ball_activ)
+springmenu.add_command(label="with mouse...", command=donothing)
+springmenu.add_command(label="random...", command=create_spring_activ)
+menubar.add_cascade(label="Spring", menu=springmenu)
+
+ropemenu = Menu(menubar, tearoff=0)
+ropemenu.add_command(label="between balls...", command=create_rope_activ)
+ropemenu.add_command(label="with mouse...", command=donothing)
+ropemenu.add_command(label="random...", command=donothing)
+menubar.add_cascade(label="Rope", menu=ropemenu)
+
+spokemenu = Menu(menubar, tearoff=0)
+spokemenu.add_command(label="between balls...", command=create_ball_activ)
+spokemenu.add_command(label="with mouse...", command=donothing)
+spokemenu.add_command(label="random...", command=donothing)
+menubar.add_cascade(label="Spoke", menu=spokemenu)
+
+
+
+
+helpmenu = Menu(menubar, tearoff=0)
+helpmenu.add_command(label="Help Index", command=donothing)
+helpmenu.add_command(label="About...", command=donothing)
+menubar.add_cascade(label="Help", menu=helpmenu)
+
+root.config(menu=menubar)
+
+root.focus_set() 
+loop()
+root.mainloop()
+c.mainloop()
