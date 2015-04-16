@@ -1,4 +1,7 @@
-
+n=input()
+k=input()
+w=1366
+h=768
 def is_prime (n):
 	k = n
 	b = 2
@@ -52,3 +55,6 @@ def cells(n , k):
 		ind += 1
 		x , y = walk(x , y , k)
 	return cells
+cs=cell_sequence(n,k)
+ar=set_colour(cs)
+draw(w,h,k,ar)
