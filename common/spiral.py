@@ -52,7 +52,7 @@ def walk(x , y , SIZE):
 		if y - x > -1:
 			return x , y+1
 
-def cells(n , k):
+def cell_sequence(n , k):
 	x = k//2
 	y = k//2
 	X = k//2
@@ -64,6 +64,17 @@ def cells(n , k):
 		ind += 1
 		x , y = walk(x , y , k)
 	return cells
+	
+def test_cells():
+	if not cell_sequence(1 , 7)[3] == (0 , -1 , 3):
+		return False
+	elif not cell_sequence(3 , 5)[5] == (-1 , 0 , 8):
+		return False
+	elif not cell_sequence(11 , 11)[9] == (2 , 1 , 20):
+		return False
+	else:
+		return True
+	
 cs=cell_sequence(n,k)
 ar=set_colour(cs)
 draw(w,h,k,ar)
