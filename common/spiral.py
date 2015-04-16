@@ -28,6 +28,15 @@ def test_is_prime ():
 		return False
 	return True
 	
+def get_coordinate(width, height, k, i, j):
+	size = width/k
+	x1 = width/2 + i * size
+	y1 = height/2 - (j + 1) * size
+	x2 = x1 + size
+	y2 = y1 + size
+
+	return (x1, y1, x2, y2)
+	
 def walk(x , y , SIZE):
 	#insider programm, used by cells and not to be an element of the spiral.py
 	if x + y > SIZE - 2:
