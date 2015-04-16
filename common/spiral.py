@@ -25,3 +25,30 @@ def test_is_prime ():
 		return False
 	return True
 	
+def walk(x , y , SIZE):
+	#insider programm, used by cells and not to be an element of the spiral.py
+	if x + y > SIZE - 2:
+		if y - x > -1:
+			return x+1 , y
+	if x + y > SIZE - 1:
+		if y - x < 1:
+			return x , y-1
+	if x + y < SIZE:
+		if y - x < 0:
+			return x-1 , y
+	if x + y < SIZE-1:
+		if y - x > -1:
+			return x , y+1
+
+def cells(n , k):
+	x = k//2
+	y = k//2
+	X = k//2
+	Y = k//2
+	cells = []
+	ind = n
+	while ind < k**2 + n:
+		cells.append((X-x , Y-y , ind))
+		ind += 1
+		x , y = walk(x , y , k)
+	return cells
