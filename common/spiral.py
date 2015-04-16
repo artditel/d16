@@ -58,3 +58,11 @@ def cells(n , k):
 cs=cell_sequence(n,k)
 ar=set_colour(cs)
 draw(w,h,k,ar)
+
+def draw_and_halt(width,height,k,ar):
+	cell_num = 0
+	for x in range(0, k * (width//k), (width//k)):
+		for y in range(0, k * (height//k),(height//k)):
+			cd = get_cordinate(width,height,k,x,y)
+			c.create_rectangle( cd[0] , cd[1],cd[2],  cd[3], fill = ar[cell_num[2]])
+			cell_num = cell_num+1
