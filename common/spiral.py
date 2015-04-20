@@ -1,5 +1,5 @@
-n=input()
-k=input()
+n=int(input())
+k=int(input())
 w=1366
 h=768
 def is_prime (n):
@@ -74,11 +74,6 @@ def test_cells():
 		return False
 	else:
 		return True
-	
-cs=cell_sequence(n,k)
-ar=set_colour(cs)
-draw(w,h,k,ar)
-
 def draw_and_halt(width,height,k,ar):
 	cell_num = 0
 	for x in range(0, k * (width//k), (width//k)):
@@ -86,3 +81,8 @@ def draw_and_halt(width,height,k,ar):
 			cd = get_cordinate(width,height,k,x,y)
 			c.create_rectangle( cd[0] , cd[1],cd[2],  cd[3], fill = ar[cell_num[2]])
 			cell_num = cell_num+1
+	
+cs=cell_sequence(n,k)
+ar=set_colour(cs)
+draw(w,h,k,ar)
+
