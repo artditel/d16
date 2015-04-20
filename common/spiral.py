@@ -2,6 +2,7 @@ n=int(input())
 k=int(input())
 w=1366
 h=768
+
 def is_prime (n):
 	k = n
 	b = 2
@@ -27,6 +28,7 @@ def test_is_prime ():
 	if is_prime (11) == False:
 		return False
 	return True
+	
 def give_me_colour(self_seq):
 	for j in self_seq:
 		number = j[2]
@@ -38,7 +40,8 @@ def give_me_colour(self_seq):
 			j[2] = "Red"
 		else:
 			j[2] = "Green"
-		return(self_seq)    
+		return(self_seq)   
+		
 def test_give_me_colour():
 	assert(give_me_colour([[1, 1, 24]]) == [[1, 1, "Red"]])
 	assert(give_me_colour([[1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
@@ -47,6 +50,7 @@ def test_give_me_colour():
 	assert(give_me_colour([[1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
 	assert(give_me_colour([[1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58]]) == ([[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
 	assert(give_me_colour([[1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97]]) == ([[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]]))           
+
 def get_coordinate(width, height, k, i, j):
 	size = width/k
 	x1 = width/2 + i * size
@@ -72,6 +76,7 @@ def walk(x , y , SIZE):
 			return x , y+1
 
 def cell_sequence(n , k):
+	#By Me
 	x = k//2
 	y = k//2
 	X = k//2
@@ -85,14 +90,15 @@ def cell_sequence(n , k):
 	return cells
 	
 def test_cells():
-	if not cell_sequence(1 , 7)[3] == (0 , -1 , 3):
-		return False
-	elif not cell_sequence(3 , 5)[5] == (-1 , 0 , 8):
-		return False
-	elif not cell_sequence(11 , 11)[9] == (2 , 1 , 20):
-		return False
+	if not cell_sequence(1 , 7)[3] == (0 , 1 , 4):
+		return 1
+	elif not cell_sequence(3 , 5)[5] == (1 , 0 , 8):
+		return 2
+	elif not cell_sequence(11 , 11)[9] == (-2 , -1 , 20):
+		return 3
 	else:
 		return True
+
 def draw_and_halt(width,height,k,ar):
 	cell_num = 0
 	for x in range(0, k * (width//k), (width//k)):
