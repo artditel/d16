@@ -28,11 +28,11 @@ def test_is_prime ():
 		return False
 	return True
 def give_me_colour(self_seq):
-    k = []
+	k = []
 	for j in self_seq:
 		number = j[2]
 		a = 0
-        k.append([j])
+		k.append([j])
 	for i in range(number):
 		if number//(i + 1) == number/(i + 1):                                
 			a += 1
@@ -40,7 +40,7 @@ def give_me_colour(self_seq):
 			k[2] = "Red"
 		else:
 			k[2] = "Green"
-		return(k)    
+	return(k)    
 def test_give_me_colour():
 	assert(give_me_colour([[1, 1, 24]]) == [[1, 1, "Red"]])
 	assert(give_me_colour([[1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
