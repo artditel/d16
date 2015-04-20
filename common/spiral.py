@@ -28,18 +28,17 @@ def test_is_prime ():
 		return False
 	return True
 def give_me_colour(self_seq):
-    for j in self_seq:
-        number = j[2]
-        a = 0
-        for i in range(number):
-            if number//(i + 1) == number/(i + 1):                                
-                a += 1  
-
-        if a > 2:
-            j[2] = "Red"
-        else:
-            j[2] = "Green"
-    return(self_seq)    
+	for j in self_seq:
+		number = j[2]
+		a = 0
+	for i in range(number):
+		if number//(i + 1) == number/(i + 1):                                
+			a += 1
+		if a > 2:
+			j[2] = "Red"
+		else:
+			j[2] = "Green"
+		return(self_seq)    
 def test_give_me_colour():
 	assert(give_me_colour([[1, 1, 24]]) == [[1, 1, "Red"]])
 	assert(give_me_colour([[1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
@@ -94,22 +93,15 @@ def test_cells():
 		return False
 	else:
 		return True
-
 def draw_and_halt(width,height,k,ar):
-	import tkinter
-	c = tkinter.Canvas(width = width, height = height)
-	c.pack()
 	cell_num = 0
-	while cell_num < len(ar) - 1:
-		for x in range(0, k * (width//k), (width//k)):
-			for y in range(0, k * (height//k),(height//k)):
-				cd = get_coordinate(width,height,k,x,y)
-				print(cell_num)
-				c.create_rectangle( cd[0] , cd[1],cd[2],  cd[3], fill = ar[cell_num][2])
-				cell_num = cell_num+1
-	c.mainloop()
-
+	for x in range(0, k * (width//k), (width//k)):
+		for y in range(0, k * (height//k),(height//k)):
+			cd = get_cordinate(width,height,k,x,y)
+			c.create_rectangle( cd[0] , cd[1],cd[2],  cd[3], fill = ar[cell_num[2]])
+			cell_num = cell_num+1
+	
 cs=cell_sequence(n,k)
-ar=set_colour(cs)
+ar=give_me_colour(cs)
 draw(w,h,k,ar)
 
