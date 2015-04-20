@@ -42,12 +42,12 @@ def give_me_colour(self_seq):
     return(self_seq)    
 def test_give_me_colour():
 	assert(give_me_colour([[1, 1, 24]]) == [[1, 1, "Red"]])
-	assert(tuple(give_me_colour([[1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]])) == ([1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]))
-	assert(tuple(give_me_colour([[1, 1, 86], [1, 1, 3], [1, 1, 23], [1, 1, 56], [1, 1, 465]])) == ([1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]))
-	assert(tuple(give_me_colour([[1, 1, 24], [1, 1, 58], [1, 1, 94], [1, 1, 20], [1, 1, 36]])) == ([1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"]))
-	assert(tuple(give_me_colour([[1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82]])) == ([1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]))
-	assert(tuple(give_me_colour([[1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58]])) == ([1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]))
-	assert(tuple(give_me_colour([[1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97]])) == ([1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]))           
+	assert(give_me_colour([[1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
+	assert(give_me_colour([[1, 1, 86], [1, 1, 3], [1, 1, 23], [1, 1, 56], [1, 1, 465]]) == ([[1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
+	assert(give_me_colour([[1, 1, 24], [1, 1, 58], [1, 1, 94], [1, 1, 20], [1, 1, 36]]) == ([[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"]]))
+	assert(give_me_colour([[1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82]]) == ([[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
+	assert(give_me_colour([[1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58]]) == ([[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
+	assert(give_me_colour([[1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97]]) == ([[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]]))           
 def get_coordinate(width, height, k, i, j):
 	size = width/k
 	x1 = width/2 + i * size
