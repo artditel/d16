@@ -14,7 +14,11 @@ w,h=WIDTH,HEIGHT
 FPS = 100
 min_stiffness=0.000001
 max_stiffness=0.001
-
+pi=math.pi
+def create_ring(n,Radius,x,y):
+    for i in range(0,n):
+        Game.balls.append(  Ball(x+math.cos(2*pi*i/n)*Radius,y-math.sin(2*pi*i/n)*Radius, Vector(math.sin(2*pi*i/n),math.cos(2*pi*i/n)),1,3,'red')  )
+create_ring(3,50,w/2+400,h/2)
 meet=[0,0]
 standart_Rad_of_ball=6
 FIELD_COLOR='Lime green'
