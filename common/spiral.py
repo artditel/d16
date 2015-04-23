@@ -30,7 +30,7 @@ def test_is_prime ():
 def give_me_colour(self_seq):
     k = []
     for j in self_seq:
-        k.append(j)
+        k.append(list(j))
     for i in k:
         number = i[2]
         a = 0
