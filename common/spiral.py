@@ -49,15 +49,21 @@ assert(give_me_colour(([1, 1, 24], [1, 1, 58], [1, 1, 94], [1, 1, 20], [1, 1, 36
 assert(give_me_colour(([1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82])) == [[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]])
 assert(give_me_colour(([1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58])) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]])
 assert(give_me_colour(([1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97])) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]]) 
+
 def get_coordinate(width, height, k, i, j):
-	size = width/k
+	if k % 2 == 1:
+		size = width/k
+	else:
+		size = width/(k+1)
+
 	x1 = width/2 + i * size
 	y1 = height/2 - (j + 1) * size
 	x2 = x1 + size
 	y2 = y1 + size
 
+
 	return (x1, y1, x2, y2)
-	
+
 def walk(x , y , SIZE):
 	#insider programm, used by cells and not to be an element of the spiral.py
 	if x + y > SIZE - 2:
