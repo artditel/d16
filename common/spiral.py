@@ -28,29 +28,27 @@ def test_is_prime ():
 		return False
 	return True
 def give_me_colour(self_seq):
-	k = []
-	for j in self_seq:
-		number = j[2]
-		a = 0
-		k.append([j])
-	for i in range(number):
-		if number//(i + 1) == number/(i + 1):                                
-			a += 1
-		if a > 2:
-			k[2] = "Red"
-		else:
-			k[2] = "Green"
-	return(k)    
-def test_give_me_colour():
-
-	assert(give_me_colour(([1, 1, 24]) == [[1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32]) == [[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 86], [1, 1, 3], [1, 1, 23], [1, 1, 56], [1, 1, 465]) == [[1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 24], [1, 1, 58], [1, 1, 94], [1, 1, 20], [1, 1, 36]) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82]) == [[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58]) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]]))
-	assert(give_me_colour(([1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97]) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]]))           
-
+    k = []
+    for j in self_seq:
+        k.append(j)
+    for i in k:
+        number = i[2]
+        a = 0
+        for u in range(number):
+            if number//(u + 1) == number/(u + 1):                                
+                a += 1  
+        if a > 2:
+            i[2] = "Red"
+        else:
+            i[2] = "Green"            
+    return(k) 
+print(give_me_colour(([1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32])))
+assert(give_me_colour(([1, 1, 1], [1, 1, 3], [1, 1, 5], [1, 1, 15], [1, 1, 32])) == [[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]])
+assert(give_me_colour(([1, 1, 86], [1, 1, 3], [1, 1, 23], [1, 1, 56], [1, 1, 465])) == [[1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"], [1, 1, "Red"]])
+assert(give_me_colour(([1, 1, 24], [1, 1, 58], [1, 1, 94], [1, 1, 20], [1, 1, 36])) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"]])
+assert(give_me_colour(([1, 1, 7], [1, 1, 3], [1, 1, 37], [1, 1, 3], [1, 1, 82])) == [[1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]])
+assert(give_me_colour(([1, 1, 28], [1, 1, 94], [1, 1, 59], [1, 1, 3], [1, 1, 58])) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"], [1, 1, "Green"], [1, 1, "Red"]])
+assert(give_me_colour(([1, 1, 48], [1, 1, 85], [1, 1, 6], [1, 1, 56], [1, 1, 97])) == [[1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Red"], [1, 1, "Green"]]) 
 def get_coordinate(width, height, k, i, j):
 	size = width/k
 	x1 = width/2 + i * size
