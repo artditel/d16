@@ -97,7 +97,7 @@ def test_cells():
 		return False
 	else:
 		return True
-def draw_and_halt(width,height,k,ar):
+def draw(width,height,k,ar):
 	import tkinter
 	c = tkinter.Canvas(width = width, height = height)
 	c.pack()
