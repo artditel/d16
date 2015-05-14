@@ -32,7 +32,6 @@ def reader(file):
 
 rade = reader("commands.txt")
 
-
 #the following uses global ro_x and ro_y coordinates and the board list of 0 and 1, where a 1 cell is painted and 0 is not;
 #it returns new ro_x and ro_y coordinates and changes the colour of a cell if needed
 
@@ -74,10 +73,20 @@ def inpey(k):
 
 	return(x , y)
 
+
+#for i in range(countey):
+#	ro_x , ro_y = inpey(i+1)
+
+
 def paint(i, j):
 	c.create_rectangle(i + size/2, j + size/2, i - size/2, j - size/2, fill = 'white')
-for i in board:
-	for j in board[i]:
-		if board[i][j] == 1:
-			paint(ro_x, ro_y)
+
+for k in range(countey):
+	ro_x , ro_y = inpey(k+1)
+	for i in range(SIZE):
+		for j in board[i]:
+			if board[i][j] == 1:
+				paint(ro_x, ro_y)
+
+
 c.mainloop()
