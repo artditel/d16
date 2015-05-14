@@ -1,0 +1,40 @@
+#the following uses global ro_x and ro_y coordinates and the board list of 0 and 1, where a 1 cell is painted and 0 is not;
+#it returns new ro_x and ro_y coordinates and changes the colour of a cell if needed
+
+def inpey(k):
+	global ro_x
+	global ro_y
+	global SIZE
+	global board
+	x = ro_x
+	y = ro_y
+	commey = reader(k)
+
+	if commey == left:
+		if x:
+			x = x - 1
+		else:
+			x = SIZE - 1
+
+	if commey == right:
+		if SIZE - x - 1:
+			x = x + 1
+		else:
+			x = 0
+
+	if commey == up:
+		if y:
+			y = y - 1
+		else:
+			y = SIZE - 1
+
+	if commey == down:
+		if SIZE - y - 1:
+			y = y + 1
+		else:
+			y = 0
+
+	if commey == paint:
+		board[x][y] = 1 - board[x][y]
+		
+	return(x , y)
