@@ -77,6 +77,6 @@ def inpey(k):
 def paint(i, j):
 	c.create_rectangle(i + size/2, j + size/2, i - size/2, j - size/2, fill = 'white')
 for i in board:
-	if board[i] == 'paint':
+	if board[i][j] == 1:
 		paint(ro_x, ro_y)
 c.mainloop()
