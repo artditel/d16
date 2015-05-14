@@ -7,26 +7,31 @@ length = 50
 size = 50
 for x in range(0, SIZE, 1):
 	for y in range(0, SIZE, 1):
-		c.create_rectangle( length + x * size , length + y * size, length + x * size - size,length +  y * size - size, fill = "saddle brown")
+		c.create_rectangle( length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "saddle brown")
 
-stair = [0] * SIZE
-board = [stair] * SIZE
+
+a = [0] * SIZE
+board = [a[:] for i in range(SIZE)]
+
 ro_x = int(input())
 ro_y = SIZE - int(input())
+countey = 0
 
-print(board)
 
 
 def reader(file):
 	f_read = open(file, 'r')
 	reader = []
+	global countey
 	for line in f_read.readlines():
 		line = line.strip()
 		reader.append(line)
+		countey += 1
 	f_read.close()
 	return(reader)
 
-rade = reader(commands.txt)
+rade = reader("commands.txt")
+
 
 #the following uses global ro_x and ro_y coordinates and the board list of 0 and 1, where a 1 cell is painted and 0 is not;
 #it returns new ro_x and ro_y coordinates and changes the colour of a cell if needed
