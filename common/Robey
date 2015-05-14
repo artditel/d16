@@ -38,3 +38,11 @@ def inpey(k):
 		board[x][y] = 1 - board[x][y]
 		
 	return(x , y)
+def reader(file):
+	f_read = open(file, 'r')
+	reader = []
+	for line in f_read.readlines():
+		line = line.strip()
+		reader.append(line)
+	f_read.close()
+	return(reader)
