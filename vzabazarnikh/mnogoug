@@ -1,0 +1,32 @@
+def poisk_lev (mas):
+        k = 0
+        l = -1
+        for x in mas:
+                l = l + 1
+                if x[0] < mas[k][0]:
+                        k = l
+        return (k)
+
+def ur (a, b):
+        f = (a[1] - b[1])/(a[0] - b[0])
+        z = a[2] - f*a[1]
+        return [f, z]
+
+def peres (x, a):
+        v = (a[0] - x[0])/(x[1] - a[2])
+        t = v*a[0] + a[1]
+        return [v, t]
+
+def opr_bol_ug (a, b, c, d):
+        k = peres(ur(a,d), ur(c, b))
+        if k[0] > d[0]:
+                return (c)
+        if k[0] < [0]:
+                return (c)
+        return (d)
+
+def opr (a, b, mas):
+        h = 0
+        for y in mas:
+                h = opr_bol_ug (a, b, y, h)
+        return (h)
