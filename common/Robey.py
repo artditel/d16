@@ -83,12 +83,12 @@ def paint(x, y):
 
 for k in range(countey):
 	ro_x , ro_y = inpey(k+1)
-	c.create_oval(length + ro_x * size , length + ro_y * size, length + ro_x * size - size, length +  ro_y * size - size, fill = "white")
 	for i in range(SIZE):
-		for j in board[i]:
+		for j in range(SIZE):
 			c.create_rectangle(length + i * size , length + j * size, length + i * size - size, length +  j * size - size, fill = "saddle brown")
-			if j:
-				paint(i, j)
+			if board[i][j]:
+				paint(i , j)
+	c.create_oval(length + ro_x * size , length + ro_y * size, length + ro_x * size - size, length +  ro_y * size - size, fill = "white")
 	print(board)
 
 
