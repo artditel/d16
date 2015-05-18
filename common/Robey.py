@@ -88,7 +88,7 @@ for k in range(countey):
 			c.create_rectangle(length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "saddle brown")
 			if j:
 				paint(i, j)
-	c.create_oval(length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "white")
+	c.create_oval(length + ro_x * size , length + ro_y * size, length + ro_x * size - size, length +  ro_y * size - size, fill = "white")
 
 
 c.mainloop()
