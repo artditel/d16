@@ -78,15 +78,17 @@ def inpey(k):
 #	ro_x , ro_y = inpey(i+1)
 
 
-def paint(i, j):
-	c.create_rectangle(i + size/2, j + size/2, i - size/2, j - size/2, fill = 'white')
+def paint(x, y):
+		c.create_rectangle(length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "black")
 
 for k in range(countey):
 	ro_x , ro_y = inpey(k+1)
 	for i in range(SIZE):
 		for j in board[i]:
-			if board[i][j] == 1:
-				paint(ro_x, ro_y)
+			c.create_rectangle(length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "saddle brown")
+			if j:
+				paint(i, j)
+	c.create_oval(length + x * size , length + y * size, length + x * size - size, length +  y * size - size, fill = "white")
 
 
 c.mainloop()
