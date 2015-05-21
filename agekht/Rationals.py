@@ -22,8 +22,9 @@ class Rationals():
         z = Rationals(x, y)
         return(z)
 
-#    def __str__(self):
-
+    def __str__(self):
+        a = str(self.m) + "/" + str(self.n)
+        return(a)
 
 #-------------
 
