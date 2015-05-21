@@ -238,7 +238,7 @@ def make_move(game,c):
             b2=game.balls[j]
             if i<j and b1.impregnability==0 and b2.impregnability==0 and b1.m!='inf' and b2.m!='inf':
                 b1.force += b1.vec_to(b2) * Game.G * b1.m * b2.m /b1.distance(b2) ** 2
-                b2.force += b2.vec_to(b2) * Game.G * b2.m * b1.m /b2.distance(b1) ** 2
+                b2.force += b2.vec_to(b1) * Game.G * b2.m * b1.m /b2.distance(b1) ** 2
                 if (b1.v+b1).distance(b2.v+b2)<(b1.R+b2.R):
                     activ=2
                 if (b1+b1.v).distance(b2+b2.v)<(b1.R+b2.R):
