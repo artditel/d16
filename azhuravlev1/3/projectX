@@ -36,5 +36,4 @@ class lift:
 for i in queries:
     for k in range(len(i)):
         i[k]=0
-print(queries) 
-
+print(queries)    
