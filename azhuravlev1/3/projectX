@@ -7,8 +7,23 @@ for line in f_read:
     line = line.strip()
     queries.append(line)
 print(queries)
+hum=0
 for i in range(len(queries)):
     queries[i]=parse_ints(queries[i])
+    queries[i].insert(0, "pb")
+    queries[i].insert(3, 0)
+    queries[i].insert(5, hum)
+    hum+=1
 print (queries)
 class event:
+    type_e=1
+    where=1
+    when=1
+    lift=1
+    destination=1
+    human=1
+for i in queries:
+    for k in range(len(i)):
+        i[k]=0
+print(queries)
 
