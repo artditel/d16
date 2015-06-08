@@ -14,9 +14,10 @@ def read_words_file(words_file):
 
 
 def add_to_dictionary(word, dictionary):
-	part = word[0: len(word)-2]
-	if part in dictionary_parts.values() :
-		dictionary[word] += 1
+	if len(word) > 2:
+		part = word[0: len(word)-2]
+		if part in dictionary_parts.values():
+			dictionary[dictionary_parts[part]] += 1
 #	else:
 #		dictionary[word] = 0
 
