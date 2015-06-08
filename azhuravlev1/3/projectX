@@ -10,3 +10,5 @@ print(queries)
 for i in range(len(queries)):
     queries[i]=parse_ints(queries[i])
 print (queries)
+class event:
+
