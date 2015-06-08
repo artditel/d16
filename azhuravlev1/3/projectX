@@ -1,7 +1,12 @@
+def parse_ints(l):
+	n=list(map(int, l.split()))
+	return n
 queries=[]
 f_read = open('Newfile.py', 'r')
 for line in f_read:
     line = line.strip()
     queries.append(line)
-print(queries[0])
-for i in queries
+print(queries)
+for i in range(len(queries)):
+    queries[i]=parse_ints(queries[i])
+print (queries)
