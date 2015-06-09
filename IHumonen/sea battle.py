@@ -151,7 +151,11 @@ def shot(event):
         regim=3
         cnv.delete(text)
         text=cnv.create_text(w//2, size//2, text='you win')
+def false_shot(event):
+    event.x, event.y=crd(event.x, event.y)
+    c.create_oval(event.x, event.y, (event.x+size), (event.y+size), fill='darkgrey')
 c.bind('<Button-1>', shot)
+c.bind('<Button-3>', false_shot)
 cn.bind('<Button-1>', corabl)
 cn.bind('<Motion>', put)
 cn.bind('<Button-3>', povorot)
