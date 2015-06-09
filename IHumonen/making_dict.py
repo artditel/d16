@@ -16,7 +16,7 @@ def read_words_file(words_file):
 def add_to_dictionary(word, dictionary):
 	if len(word) > 2:
 		part = word[0: len(word)-2]
-		if part in dictionary_parts.values():
+		if part in dictionary_parts:
 			dictionary[dictionary_parts[part]] += 1
 #	else:
 #		dictionary[word] = 0
@@ -32,9 +32,9 @@ if __name__ == '__main__':
 	out_file   = sys.argv[3]
 
 	dictionary_popularity = dict.fromkeys(read_words_file(words_file), 0)
-	dictionary_parts = dict.fromkeys(read_words_file(words_file), 0)
-	for x in dictionary_parts:
-		dictionary_parts[x] = x[0: len(x)-2]
+	dictionary_parts = {}
+	for x in dictionary_popularity:
+		dictionary_parts[x[0: len(x)-2]] = x
 
 	words = read_words_file(words_file)
 	with open(text_file) as current_file, open(out_file, 'w') as out_file:
