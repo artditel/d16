@@ -4,8 +4,8 @@ def parse_ints(l):
 
 def convert(s):
     for i in s:
-        i[2]=i[2]*2
-        i[4]=i[4]*2
+        i[2]=i[2]*2.7
+        i[4]=i[4]*2.7
         return s
   
 queries=[]
