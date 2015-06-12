@@ -70,8 +70,6 @@ def removing(clr, matrix, matrix1, i, count_colours, b):
             if matrix[i][j] == 1:
                 matrix1[i][j] == 0
                 matrix1[j][i] == 0
-            else:
-                j += 1
 
 
 def contraction(clr, matrix, matrix1, i, count_colours, b):
