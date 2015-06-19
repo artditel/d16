@@ -5,6 +5,7 @@ import tkinter
 import math
 import time
 
+
 photo = input("Choose a photo:")
 
 
@@ -184,6 +185,38 @@ def feature4(array):
 	return(abrupt_changes)
 
 
+def feature5(array):
+	max_y = 0
+	min_y = im_height
+	min_x = im_width
+	max_x = 0
+	for x in range(im_height):
+		for y in range(im_width):
+			if array[x][y] >= 90:
+				if x > max_y:
+					max_y = x
+				if x < min_y:
+					min_y = x
+				if y > max_x:
+					max_x = y
+				if y < min_x:
+					min_x = y
+	average_x = (max_x + min_x)/2
+	height_of_the_digit = max_y - min_y
+	sum_of_x = 0
+	for x in range(im_height):
+		sum_of_x_in_line = 0
+		number_of_pixels_in_line = 0
+		if array[x][y] >= 90:
+			sum_of_x_in_line += (y - average_x)
+			number_of_pixels_in_line += 1
+		if number_of_pixels_in_line != 0:	
+			sum_of_x += sum_of_x_in_line/number_of_pixels_in_line
+	k = sum_of_x/height_of_the_digit
+	return k
+
+
+
 def dfs(x,y,visited,array):
 	visited.add((x,y))
 	if x < im_height-1 and array[x + 1][y] <= 90 and (x + 1, y) not in visited:
@@ -216,6 +249,7 @@ def vector(array):
 		feature2(a),
 		feature3(a),
 		feature4(a),
+		feature5(a),
 		quater1(a),
 		quater2(a),
 		quater3(a),
@@ -227,8 +261,8 @@ start = time.clock()
 new_data = [vector(x[0]) + [x[1]] for x in data]
 print("features calculated in", time.clock() - start)
 
-
-weight = [5, 6, 3, 3, 4, 4, 4, 4, 8]
+#5, 6, 3, 3, 5, 4, 4, 4, 4, 8
+weight = [5, 6, 3, 3, 5, 4, 4, 4, 4, 8]
 
 def normalize(array, index,weight):
 	max_x = max(x[index] for x in array)
@@ -236,13 +270,6 @@ def normalize(array, index,weight):
 	for x in array:
 		x[index] = (x[index]-min_x)/(max_x-min_x)*weight[index]
 
-
-start = time.clock()
-
-for index in range(len(new_data[0])-1):
-	normalize(new_data,index,weight)
-
-print("normalized in", time.clock() - start)
 
 
 def distance(array1,array2):
@@ -263,11 +290,57 @@ def recognize(x,data):
 	return (result[0][1], result)
 
 
+# def guessed_pic(x, data):
+# 	if x < len(data):
+# 		image = Image.frombytes('L', (28,28), bytes(data[x][0]))
+# 		big_image = image.resize((500,500))
+
+		
+
+# 		cnv.delete(*cnv.find_all())
+# 		image_tk = ImageTk.PhotoImage(image)
+# 		cnv.create_image(0, 0, image=image_tk, anchor ='nw')
+# 		cnv.after(200, guessed_pic(x+1, data))
+
+# 	else:
+# 		print('Done')
+
+# def guessed_digit(x, new_data):
+# 	if x < len(data):
+# 		ans = new_data[x][-1]
+# 		new_data[x][-1] = None
+# 		rec = recognize(new_data[x],new_data)[0]
+# 		new_data[x][-1] = ans
+
+
+# 		correct_digit.delete(*correct_digit.find_all())
+# 		correct_digit = correct_digit.create_text(text = (rec, ans), font = "Arial 100")
+# 		correct_digit.after(200, guessed_digit(x+1, new_data))
+
+
+# 	else:
+# 		print('Done')	
+
+
 if photo == '':
+	for index in range(len(new_data[0])-1):
+		normalize(new_data,index,weight)
 	guessed = 0
-	window = tkinter.Tk()
-	window.geometry('900x500+200+200')
-	for x in range(len(new_data)):
+
+	# window = tkinter.Tk()
+	# window.geometry('1000x500+200+200')
+	
+	# correct_digit = tkinter.Canvas(width = 500, height = 500)
+	# cnv = tkinter.Canvas(width = 500, height = 500)
+	# guessed_pic(0, data)
+	# guessed_digit(0,data)
+
+	# correct_digit.grid(row = 0, column = 0)
+	# cnv.grid(row = 0, column = 1, sticky = 'ne')
+	
+	# window.mainloop()
+
+	for x in range(500):#len(new_data)
 		ans = new_data[x][-1]
 		new_data[x][-1] = None
 		rec = recognize(new_data[x],new_data)[0]
@@ -277,21 +350,6 @@ if photo == '':
 			guessed += 1
 		if x!=0:
 			print("precent:", guessed/(x+1))
-
-
-
-
-		image = Image.frombytes('L', (28,28), bytes(data[x][0]))
-		image=image.resize((500,500))
-		correct_digit = tkinter.Label(text = (rec, ans), padx = 140, font = "Arial 100")
-		correct_digit.grid(row = 0, column = 0)
-		cnv = tkinter.Canvas(width = 500, height = 500)
-		cnv.grid(row = 0, column = 1, sticky = 'ne')
-		image_tk = ImageTk.PhotoImage(image)
-		image_id = cnv.create_image(0, 0, image=image_tk, anchor ='nw')
-		
-	window.mainloop()
-		
 
 	print("guessed:", guessed, "total:", len(new_data))
 
@@ -317,6 +375,7 @@ else:
 	image_tk = ImageTk.PhotoImage(image)
 	image_id = cnv.create_image(0, 0, image=image_tk, anchor ='nw')
 	window.mainloop()
+
 
 
 
