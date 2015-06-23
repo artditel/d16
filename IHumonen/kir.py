@@ -12,6 +12,8 @@ Point = namedtuple("Point", ["x", "y"])
 VAL  = []
 W = 15
 H = 10
+tops = []
+
 def draw_field(canvas):
     global cell_width
     global cell_height
@@ -41,8 +43,20 @@ def draw_field(canvas):
             cell_width * (W-1),
             cell_height * (H//2 + 1),
             fill= 'green')
-def starter(event):
-    pass
+
+def surroundings(y, x):
+    list_of_surroundings = [[y, x + 1], [y, x - 1], [y + 1, x], [y - 1, x]]
+    boolen = True
+    if VAl[list_of_surroundings[0]][list_of_surroundings[]:
+        boolen = False
+    return [list_of_surroundings, boolen]
+
+# def starter(event):
+#     for line in VAL:
+#         for plase in line:
+#              if place == 1:
+#                 for x in  surroundings(line, place):
+#                     if VAl[x[0]][x[1]] == 1:   
 
     
 for i in range(H):
@@ -88,23 +102,23 @@ def choose2(event):
 c.bind('<Button-1>', choose1)
 c.bind('<Button-3>', choose2)
 
-def key_press(event):
-    if event.keysym == "Return":
-        '''def obxod(t,x,y):
-            k = 0
-            oiu = []
-            if VAL[y+1][x] == 1:
-                obxod(t,x,y+1)
-                k+=1
-            if VAL[y-1][x] == 1:
-                obxod(t,x,y-1)
-                k+=1
-            if VAL[y][x+1] == 1:
-                obxod(t,x+1,y)
-                k+=1`xx`
-            if k > 1 and t == 0:
+# def key_press(event):
+#     if event.keysym == "Return":
+#         '''def obxod(t,x,y):
+#             k = 0
+#             oiu = []
+#             if VAL[y+1][x] == 1:
+#                 obxod(t,x,y+1)
+#                 k+=1
+#             if VAL[y-1][x] == 1:
+#                 obxod(t,x,y-1)
+#                 k+=1
+#             if VAL[y][x+1] == 1:
+#                 obxod(t,x+1,y)
+#                 k+=1`xx`
+#             if k > 1 and t == 0:
 
-                mass.append'''
+#                 mass.append'''
 
 
 but = tkinter.Button(root)
@@ -114,7 +128,7 @@ but['fg'] = 'yellow'
 but.pack(side = 'right')
 but.bind("<Button-1>", starter)
 
-c.bind("<Key>", key_press)
+#c.bind("<Key>", key_press)
 c.pack()
 c.focus_set()
 root.mainloop()
