@@ -42,14 +42,17 @@ def draw_field(canvas):
             cell_height * (H//2 + 1),
             fill= 'green')
 def starter(event):
-    for i in range(H):
-        vs = []
-        for j in range(W):
-            vs.append(0)
-        VAL.append(vs)
-        print(VAL)
-        VAL[H//2][0] = 1
-        VAL[H//2][W-1] = 1        
+    pass
+
+    
+for i in range(H):
+    vs = []
+    for j in range(W):
+        vs.append(0)
+    VAL.append(vs)
+VAL[H//2][0] = 1
+VAL[H//2][W-1] = 1 
+print(VAL)       
 
 root = tkinter.Tk()
 c = tkinter.Canvas(root, width=WIDTH, height=HEIGHT)
@@ -67,6 +70,7 @@ def choose1(event):
             cell_width * (cx + 1),
             cell_height * (cy + 1),
             fill= 'green')
+    print(VAL)
 
 def choose2(event):
     getx = event.x
@@ -80,6 +84,7 @@ def choose2(event):
             cell_width * (cx + 1),
             cell_height * (cy + 1),
             fill= 'red')
+    print(VAL)
 c.bind('<Button-1>', choose1)
 c.bind('<Button-3>', choose2)
 
