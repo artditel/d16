@@ -1,0 +1,15 @@
+f_read = open('input.txt', 'r')
+t = 0
+text = []
+for line in f_read:
+	lin = []
+	t+=1
+	    lin = list(map(int,line.split()))
+	    text.append(lin)
+for x in range(1,text[0][1]+1):
+	sm = []
+	sm.append(text[x][0])
+	sm.append(text[x][1])
+	
+
+f_read.close()
