@@ -11,6 +11,7 @@ import file_changes_watcher
 
 WATCH_DIRECTORIES = ['/home/sav/Dropbox/d16-calculus', '/home/sav/Dropbox/d16-programming']
 STOPWORDS = ['related']
+CSVWORDS = ['drafts'] #csvwords in path leads to csv generating
 WAIT_TIME = 10
 
 from csv_to_tex_daemon import PUPILS_NAMES
@@ -94,7 +95,8 @@ def make_pdf(file_path):
 		except FileNotFoundError:
 			pass
 		shutil.move(pdf_name, pdf_path)
-		gen_csv(log_name, csv_path)
+		if any(w in csv_path for w in CSVWORDS):
+			gen_csv(log_name, csv_path)
 	else:
 		print("error")
 		shutil.move(log_name, log_path)
