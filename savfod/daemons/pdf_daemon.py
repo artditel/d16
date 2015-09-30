@@ -6,9 +6,10 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 import file_changes_watcher
 
-WATCH_DIRECTORIES = ['Dropbox/d16-calculus', 'Dropbox/d16-programming']
+WATCH_DIRECTORIES = ['/home/sav/Dropbox/d16-calculus', '/home/sav/Dropbox/d16-programming']
 STOPWORDS = ['related']
 WAIT_TIME = 10
 
@@ -115,7 +116,7 @@ def main():
 			for file_path in watcher.get_changed_files():
 				make_pdf(file_path)
 		except Exception as e:
-			print(sys.exc_info())
+			print(traceback.format_exc())
 			if parser.debug:
 				raise e
 

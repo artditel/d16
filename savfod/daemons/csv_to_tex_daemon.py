@@ -4,10 +4,13 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 import csv
-import file_changes_watcher
 
-WATCH_DIRECTORIES = ['/home/alex/Dropbox/d16-calculus/Results']
+import file_changes_watcher
+import resave 
+
+WATCH_DIRECTORIES = ['/home/sav/Dropbox/d16-calculus/Results']
 
 PUPILS_NAMES=[\
 "Ашихмин Иван",\
@@ -32,8 +35,8 @@ PUPILS_NAMES=[\
 "Шуваева Елизавета",\
 ]
 
-BY_LIST_RESULTS_DIR = '/home/alex/Dropbox/d16-calculus/Results/ByListResults/'
-PIVOT_DIR = '/home/alex/Dropbox/d16-calculus/Results/PivotTables/'
+BY_LIST_RESULTS_DIR = '/home/sav/Dropbox/d16-calculus/Results/ByListResults/'
+PIVOT_DIR = '/home/sav/Dropbox/d16-calculus/Results/PivotTables/'
 
 PIVOT_TABLES = {\
 "Common": PUPILS_NAMES\
@@ -71,7 +74,7 @@ PIVOT_TABLES = {\
 ], \
 }
 
-PERSONAL_DIR='/home/alex/Dropbox/d16-calculus/Results/PersonalResults/'
+PERSONAL_DIR='/home/sav/Dropbox/d16-calculus/Results/PersonalResults/'
 
 FILE_START=\
 "\
@@ -238,12 +241,21 @@ def generate_tex_files(all_files):
 	names = []
 
 	for path in all_files:
-		tables.append(read_csv(path))
-		names.append(get_table_name(path))
+		TRY_COUNTS = 2
+		for i in range(TRY_COUNTS):
+			try:
+				tables.append(read_csv(path))
+				names.append(get_table_name(path))
 
-		pivot_sheet = get_needed_rows(tables[-1], PUPILS_NAMES)
-		s = tables_to_string_with_tex([pivot_sheet], [names[-1]])
-		save_to_file(s, BY_LIST_RESULTS_DIR + names[-1] + '.tex')
+				pivot_sheet = get_needed_rows(tables[-1], PUPILS_NAMES)
+				s = tables_to_string_with_tex([pivot_sheet], [names[-1]])
+				save_to_file(s, BY_LIST_RESULTS_DIR + names[-1] + '.tex')
+
+				break
+			except:
+				print(traceback.format_exc())
+				print("problem with file " + path + ". Trying to resave")
+				resave.resave(path)
 
 	for table_name, needed_rows in PIVOT_TABLES.items():
 		pivot_sheets = [get_needed_rows(t, needed_rows) for t in tables]
@@ -262,7 +274,7 @@ def main():
 			if watcher.is_smth_changed():
 				generate_tex_files(sorted(watcher.get_all_files()))
 		except Exception as e:
-			print(sys.exc_info())
+			print(traceback.format_exc())
 		time.sleep(1)
 
 
