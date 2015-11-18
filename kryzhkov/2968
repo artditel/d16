@@ -1,0 +1,28 @@
+N = int(input())
+k = N
+t = ''
+l = [t] * (N-1)
+l[0] = '0'
+l[1] = '1'
+l[2] = '3'
+for x in range(4,N+1):
+    c = '0'*250
+    b = '0'*250
+    a = l[x-2]
+    a += '1'
+
+    if x % 2 == 0:
+        b = l[x/2-1]
+        b += '2'
+    if x % 3 == 0:
+        c = l[x/3-1]
+        c += '3'
+    z == min(len(a),len(b),len(c))
+    if len(a) == z:
+        l[x-1] = a
+    if len(b) == z:
+        l[x-1] = b
+    if len(c) == z:
+        l[x-1] = c
+
+print(l[N-1])
