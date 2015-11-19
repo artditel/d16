@@ -17,3 +17,6 @@ integral(2, 3, (lambda x: x))
 integral(0, 1, (lambda x: x ** 2))
 print(2 * integral(-1, 1, (lambda x: (1 - x**2)**(1/2))))
 
+integral(0, 10, (lambda x: math.cos(x)))
+integral(0, 1, (lambda x: math.cos(10 ** 20 * x) ** 2))
+
