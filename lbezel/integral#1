@@ -1,0 +1,21 @@
+N = 10000
+def integral(f, x0, x1):
+	m = [x0, x1]
+	m.sort()
+	highth = (m[1] - m[0])/N
+	i = 0
+	while i < N:
+		m.append(0) 
+		m[i+1] = m[i]+highth
+		i+=1
+	m.sort()
+	m = m[1:]
+	itg = 0	
+	for i in range(N):
+		itg += (f(m[i]) + f(m[i+1]))*(m[i+1] - m[i])/2
+	return itg
+print(integral((lambda x: x), 2, 3))	
+print(integral((lambda x: x**2), -1, 1))
+print(2*integral((lambda x: (1 - x**2)**(1/2)), -1, 1))
+#print(integral((lambda x: cos x), 0, 10))
+
