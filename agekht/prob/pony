@@ -1,17 +1,19 @@
+import math
 N = 1000000
 
 def integral(a, b, f):
 	c = [0] * (N + 1)
 	for i in range(N + 1):
-		c[i] = i/N + a
+		c[i] = i * (b-a)/N + a
 	d = [0] * N
 	e = 0
 	for j in range(N):
-		d[j] = 1/N * (f(c[j]) + ((f(c[j + 1]) - f(c[j]))/2))
+		d[j] = (b-a)/N * (f(c[j]) + ((f(c[j + 1]) - f(c[j]))/2))
 		e += d[j]
 	print(e)
 	return e
 
 integral(2, 3, (lambda x: x))
 integral(0, 1, (lambda x: x ** 2))
-print(4 * integral(0, 1, (lambda x: (1 - x**2)**(1/2))))
+print(2 * integral(-1, 1, (lambda x: (1 - x**2)**(1/2))))
+
