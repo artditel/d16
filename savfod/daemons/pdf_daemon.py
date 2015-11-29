@@ -9,7 +9,7 @@ import time
 import traceback
 import file_changes_watcher
 
-WATCH_DIRECTORIES = ['/home/sav/Dropbox/d16-calculus', '/home/sav/Dropbox/d16-programming']
+WATCH_DIRECTORIES = ['Dropbox/d16-calculus', 'Dropbox/d16-programming', 'Dropbox/school/vmsh15/lists/tex']
 STOPWORDS = ['related']
 CSVWORDS = ['drafts'] #csvwords in path leads to csv generating
 WAIT_TIME = 10
@@ -81,7 +81,10 @@ def make_pdf(file_path):
 	except FileNotFoundError:
 		pass
 
-	subprocess.call('iconv -f utf-8 -t cp1251 ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
+	if not 'vmsh' in file_path:
+		subprocess.call('iconv -f utf-8 -t cp1251 ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
+	else:
+		subprocess.call('cat ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
 	p = subprocess.Popen(['pdflatex', '-shell-escape', '-halt-on-error', '"' + file_name + '"'])
 	try:
 		p.wait(WAIT_TIME)
