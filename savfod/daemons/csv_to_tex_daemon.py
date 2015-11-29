@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+import argparse
 import os
 import shutil
 import subprocess
@@ -11,6 +12,7 @@ import file_changes_watcher
 import resave 
 
 WATCH_DIRECTORIES = ['Dropbox/d16-calculus/Results']
+STOPWORDS = []
 
 PUPILS_NAMES=[\
 "Ашихмин Иван",\
@@ -280,7 +282,7 @@ def main():
 	while True:
 		try:
 			if watcher.is_smth_changed():
-				generate_tex_files(sorted(watcher.get_all_files()), root)
+				generate_tex_files(sorted(watcher.get_all_files()), parser.root)
 		except Exception as e:
 			print(traceback.format_exc())
 			if parser.debug:
