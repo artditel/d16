@@ -12,6 +12,7 @@ import file_changes_watcher
 WATCH_DIRECTORIES = ['Dropbox/d16-calculus', 'Dropbox/d16-programming', 'Dropbox/school/vmsh15/lists/tex']
 STOPWORDS = ['related']
 CSVWORDS = ['drafts'] #csvwords in path leads to csv generating
+NO_ICONV_WORDS = ['vmsh'] #such words in path leads to not-changing encoding utf8->cp1251 with iconv
 WAIT_TIME = 10
 
 from csv_to_tex_daemon import PUPILS_NAMES
@@ -81,10 +82,10 @@ def make_pdf(file_path):
 	except FileNotFoundError:
 		pass
 
-	if not 'vmsh' in file_path:
-		subprocess.call('iconv -f utf-8 -t cp1251 ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
-	else:
+	if any(w in file_path for w in NO_ICONV_WORDS):
 		subprocess.call('cat ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
+	else:
+		subprocess.call('iconv -f utf-8 -t cp1251 ' + '"' + file_path + '" > "' + file_name + '"', shell=True)
 	p = subprocess.Popen(['pdflatex', '-shell-escape', '-halt-on-error', '"' + file_name + '"'])
 	try:
 		p.wait(WAIT_TIME)

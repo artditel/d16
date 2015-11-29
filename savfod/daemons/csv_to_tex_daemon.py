@@ -10,7 +10,7 @@ import csv
 import file_changes_watcher
 import resave 
 
-WATCH_DIRECTORIES = ['/home/sav/Dropbox/d16-calculus/Results']
+WATCH_DIRECTORIES = ['Dropbox/d16-calculus/Results']
 
 PUPILS_NAMES=[\
 "Ашихмин Иван",\
@@ -267,14 +267,24 @@ def generate_tex_files(all_files):
 		s = tables_to_string_with_tex(pivot_sheets, names)
 		save_to_file(s, PERSONAL_DIR + pupil + '/' + pupil + '.tex')
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Finds csv files and generates tex pivot tables for them')
+    parser.add_argument('-r', '--root', type=str, default="/home/sav/", help = "root dir for file searching")
+    parser.add_argument('-d', '--debug', action='store_true', help = "debug mode. Stops working if error occurs")
+    return parser.parse_args()
+
 def main():
-	watcher = file_changes_watcher.file_changes_watcher(WATCH_DIRECTORIES, ".csv")
+	parser=parse_args()
+	watch_dirs = [os.path.join(parser.root, d) for d in WATCH_DIRECTORIES]
+	watcher = file_changes_watcher.file_changes_watcher(watch_dirs, ".tex", stopwords=STOPWORDS)
 	while True:
 		try:
 			if watcher.is_smth_changed():
 				generate_tex_files(sorted(watcher.get_all_files()))
 		except Exception as e:
 			print(traceback.format_exc())
+			if parser.debug:
+				raise e
 		time.sleep(1)
 
 
