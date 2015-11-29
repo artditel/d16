@@ -37,7 +37,7 @@ class TaskInfo:
 def get_task_message_parts(task_message):
 	parts = task_message.split('_')
 	num = int(parts[1])
-	difficulty = len(parts[2])
+	difficulty = int(parts[2])
 	return num, difficulty
 
 def read_tasks(log_path):
