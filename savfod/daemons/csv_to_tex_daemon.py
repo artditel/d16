@@ -35,8 +35,8 @@ PUPILS_NAMES=[\
 "Шуваева Елизавета",\
 ]
 
-BY_LIST_RESULTS_DIR = '/home/sav/Dropbox/d16-calculus/Results/ByListResults/'
-PIVOT_DIR = '/home/sav/Dropbox/d16-calculus/Results/PivotTables/'
+BY_LIST_RESULTS_DIR = 'Dropbox/d16-calculus/Results/ByListResults/'
+PIVOT_DIR = 'Dropbox/d16-calculus/Results/PivotTables/'
 
 PIVOT_TABLES = {\
 "Common": PUPILS_NAMES\
@@ -74,7 +74,7 @@ PIVOT_TABLES = {\
 ], \
 }
 
-PERSONAL_DIR='/home/sav/Dropbox/d16-calculus/Results/PersonalResults/'
+PERSONAL_DIR='Dropbox/d16-calculus/Results/PersonalResults/'
 
 FILE_START=\
 "\
@@ -236,7 +236,7 @@ def save_to_file(str, file_path):
 def get_table_name(path):
 	return path.split('/')[-1][:-4]
 
-def generate_tex_files(all_files):
+def generate_tex_files(all_files, root):
 	tables = []
 	names = []
 
@@ -249,7 +249,7 @@ def generate_tex_files(all_files):
 
 				pivot_sheet = get_needed_rows(tables[-1], PUPILS_NAMES)
 				s = tables_to_string_with_tex([pivot_sheet], [names[-1]])
-				save_to_file(s, BY_LIST_RESULTS_DIR + names[-1] + '.tex')
+				save_to_file(s, root + '/' + BY_LIST_RESULTS_DIR + names[-1] + '.tex')
 
 				break
 			except:
@@ -260,12 +260,12 @@ def generate_tex_files(all_files):
 	for table_name, needed_rows in PIVOT_TABLES.items():
 		pivot_sheets = [get_needed_rows(t, needed_rows) for t in tables]
 		s = tables_to_string_with_tex(pivot_sheets, names, table_name=="Common")
-		save_to_file(s, PIVOT_DIR + table_name + '.tex')
+		save_to_file(s, root + '/' + PIVOT_DIR + table_name + '.tex')
 
 	for pupil in PUPILS_NAMES:
 		pivot_sheets = [get_needed_rows(t, [pupil]) for t in tables]
 		s = tables_to_string_with_tex(pivot_sheets, names)
-		save_to_file(s, PERSONAL_DIR + pupil + '/' + pupil + '.tex')
+		save_to_file(s, root + '/' + PERSONAL_DIR + pupil + '/' + pupil + '.tex')
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Finds csv files and generates tex pivot tables for them')
@@ -280,7 +280,7 @@ def main():
 	while True:
 		try:
 			if watcher.is_smth_changed():
-				generate_tex_files(sorted(watcher.get_all_files()))
+				generate_tex_files(sorted(watcher.get_all_files()), root)
 		except Exception as e:
 			print(traceback.format_exc())
 			if parser.debug:
