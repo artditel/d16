@@ -276,7 +276,7 @@ def parse_args():
 def main():
 	parser=parse_args()
 	watch_dirs = [os.path.join(parser.root, d) for d in WATCH_DIRECTORIES]
-	watcher = file_changes_watcher.file_changes_watcher(watch_dirs, ".tex", stopwords=STOPWORDS)
+	watcher = file_changes_watcher.file_changes_watcher(watch_dirs, ".csv", stopwords=STOPWORDS)
 	while True:
 		try:
 			if watcher.is_smth_changed():
