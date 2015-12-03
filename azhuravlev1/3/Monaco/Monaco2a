@@ -1,0 +1,31 @@
+import math
+import random
+f= lambda x:math.cos(x)
+
+def trapezium_integral(a, b, f, n):
+	dx=(b-a)/n
+	es=0
+	for i in range(n):
+		l=(f((i+1)*dx+a)-f(i*dx+a))/2.+f(i*dx+a)
+		s=dx*l
+		es=es+s
+	return es
+
+def MonteCarlo(a, b, f, n):
+	c=0; l=0
+	for i in range(n):
+		u=random.uniform(a, b)
+		v=random.uniform(0, 1)
+		if f(u)>=v:
+			c =c+1
+	for i in range(n):
+		u=random.uniform(a, b)
+		v=random.uniform(-1, 0)
+		if f(u)<=v:
+			l =l+1
+	s=1*10
+	return (c/n*s)-(l/n*s)
+for i in range (21):
+	print(MonteCarlo(0, 10, f, 2**i))
+for i in range (21):
+	print(trapezium_integral(0, 10, f, 2**i))
