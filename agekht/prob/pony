@@ -1,7 +1,9 @@
 import math
+import random
 N = 1000000
 
 def integral(a, b, f):
+	N = 1000000
 	c = [0] * (N + 1)
 	for i in range(N + 1):
 		c[i] = i * (b-a)/N + a
@@ -13,10 +15,20 @@ def integral(a, b, f):
 	print(e)
 	return e
 
-integral(2, 3, (lambda x: x))
-integral(0, 1, (lambda x: x ** 2))
-print(2 * integral(-1, 1, (lambda x: (1 - x**2)**(1/2))))
+def integral1(a, b, f):
+	N = 1000000
+	summ = 0
+	for N in range(N + 1):
+		c = random.uniform(a, b)
+		d = f(c)
+		summ += d
+	e = (b - a) * summ /N
+	print(e)
+	return e
+
+#integral1 - способ Монте-Карло
 
 integral(0, 10, (lambda x: math.cos(x)))
-integral(0, 1, (lambda x: math.cos(10 ** 20 * x) ** 2))
-
+integral(0, 1, (lambda x: math.cos(math.pi * 2 ** 20 * x) ** 2))
+integral1(0, 10, (lambda x: math.cos(x)))
+integral1(0, 1, (lambda x: math.cos(math.pi * 2 ** 20 * x) ** 2))
