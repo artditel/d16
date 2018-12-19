@@ -1,0 +1,240 @@
+import tkinter
+import sys
+import random
+
+from collections import namedtuple
+
+Game = namedtuple("Game", ["width", "height", "snake", "apples", "blocks", "is_over"])
+Point = namedtuple("Point", ["x", "y"])
+
+APPLE_COLOR = "red"
+BLOCK_COLOR = "gray"
+EMPTY_COLOR = "white"
+SNAKE_COLOR = "green"
+HEAD_COLOR = "blue"
+WIDTH=660
+HEIGHT=660
+FPS = 40
+DRAW_EVERY = 1
+
+
+def draw_field(canvas, game):
+  cell_width = WIDTH // game.width
+  cell_height = HEIGHT // game.height
+  def draw_cell(point, color):
+    canvas.create_rectangle(
+        cell_width * point.x,
+        cell_height * point.y,
+        cell_width * (point.x + 1),
+        cell_height * (point.y + 1),
+        fill=color)
+
+  canvas.delete(*canvas.find_all())
+
+  for i in range(game.width):
+    for j in range(game.height):
+      draw_cell(Point(i, j), EMPTY_COLOR)
+  for p in game.apples:
+    draw_cell(p, APPLE_COLOR)
+  for p in game.blocks:
+    draw_cell(p, BLOCK_COLOR)
+  draw_cell(game.snake[0], HEAD_COLOR)
+  for p in game.snake[1:]:
+    draw_cell(p, SNAKE_COLOR)
+
+
+def empty_cell(game):
+  empty_count = game.width * game.height - len(game.blocks) - len(game.apples)
+  if not empty_count:
+    print("Field is full")
+    return None
+  while True:
+    cell = Point(random.randrange(game.width), random.randrange(game.height))
+    if not (cell in game.blocks or cell in game.apples or cell in game.snake):
+      return cell
+
+
+def make_move(game, direction):
+  head = game.snake[0]
+  prev = game.snake[1]
+  diff = Point(head.x - prev.x, head.y - prev.y)
+  if direction == "left":
+    diff = Point(diff.y, -diff.x)
+  elif direction == "right":
+    diff = Point(-diff.y, diff.x)
+  elif direction != "forward":
+    print("Unknown direction")
+  destination = Point(head.x + diff.x, head.y + diff.y)
+  if destination in game.blocks:
+    print("Met block:", destination)
+    return game._replace(is_over=True)
+  if not 0 <= destination.x < game.width or not 0 <= destination.y < game.height:
+    print("Out of field")
+    return game._replace(is_over=True)
+
+  if destination in game.apples:
+    print("Apple:", destination)
+    new_apple = empty_cell(game)
+    if new_apple is None:
+      print("You won!")
+      return game._replace(is_over=True)
+    return game._replace(
+        apples=(game.apples - frozenset([destination])) | frozenset([empty_cell(game)]), 
+        snake=(destination,) + game.snake)
+  if destination in game.snake:
+    print("You have eaten yourself! Nom-nom")
+    return game._replace(is_over=True)
+
+  return game._replace(
+      snake=(destination,) + game.snake[:-1])
+
+
+def level1():
+  return Game(
+      width=20,
+      height=20,
+      snake=(
+        Point(2, 4),
+        Point(2, 3),
+        Point(2, 2)),
+      apples=frozenset(
+        (Point(7,7),
+         Point(5,5), 
+         Point(1,1),
+         Point(4,2),
+         )),
+      blocks=frozenset((Point(0, 0), Point(9, 9))),
+      is_over=False)
+
+def level2():
+  width = 13
+  height = 13
+  blocks = frozenset(
+      [Point(width//2, y) for y in range(height//2-1)] +
+      [Point(width//2, y) for y in range(height//2+2, height)] +
+      [Point(x, height//2) for x in range(width//2+2, width)] +
+      [Point(x, height//2) for x in range(width//2-1)])
+  apples=frozenset((Point(width//2, height//2),))
+  snake=(Point(0,1), Point(0,0))
+  return Game(width, height, snake, apples, blocks, False)
+
+def level3():
+  width = 15
+  height = 15
+  blocks = frozenset(
+      [Point(y, y) for y in range(2,height-2)] +
+      [Point(width-y-1, y) for y in range(2,height-2)] +
+      [Point(width//2, height//2+3),
+      Point(width//2, height//2-3),
+      Point(width//2+3, height//2),
+      Point(width//2-3, height//2)])
+  apples=frozenset((
+  Point(width-1, height-1),
+  Point(width-1,0),
+  Point(0, height-1),
+  Point(width//2, height//2+1),
+  Point(width//2, height//2-1),
+  Point(width//2+1, height//2),
+  Point(width//2-1, height//2),
+  ))
+  snake=(Point(0,1), Point(0,0))
+  return Game(width, height, snake, apples, blocks, False)
+
+def level4():
+  game = Game(
+      width=20,
+      height=20,
+      snake=(Point(0,1), Point(0,0)),
+      apples=frozenset((
+          Point(0,19), Point(6,6), Point(2,10),
+          Point(10,2), Point(10,11), Point(15,15))),
+      blocks=frozenset(),
+      is_over=False)
+  random.seed(10)
+  for _ in range(50):
+    game = game._replace(blocks=game.blocks | frozenset([empty_cell(game)]))
+  random.seed()
+  return game
+
+def level5():
+  width = 9
+  height = 9
+  blocks = frozenset(
+      [Point(x, y)
+      for y in range(1,height-1)
+        for x in range(1,width-1)
+          if x != width//2 and y != height//2])
+  apples=frozenset(( Point(width//2, height//2),))
+  snake=(Point(0,1), Point(0,0))
+  return Game(width, height, snake, apples, blocks, False)
+
+
+def get_level(level):
+  if level == "1":
+    return level1()
+  elif level == "2":
+    return level2()
+  elif level == "3":
+    return level3()
+  elif level == "4":
+    return level4()
+  elif level == "5":
+    return level5()
+  else:
+    print("Unknown level, running the first one")
+    return level1()
+
+if __name__ == "__main__":
+  c = tkinter.Canvas(width=WIDTH, height=HEIGHT)
+  c.pack()
+  c.focus_set()
+
+  strategy_file = ""
+  level = "1"
+  for v in sys.argv[1:]:
+    if v.endswith(".py"):
+      strategy_file = v
+    else:
+      level = v
+
+  if not strategy_file:
+    key = "forward"
+    def key_press(event):
+      global key
+      if event.keysym == "Left":
+        key = "left"
+      if event.keysym == "Right":
+        key = "right"
+      print (event.keysym)
+    def key_strategy(game):
+      global key
+      move = key
+      key = "forward"
+      return move
+    c.bind("<Key>", key_press)
+    strategy = key_strategy
+    FPS = 5
+  else:
+    with open(strategy_file) as f:
+        code = compile(f.read(), strategy_file, 'exec')
+        global_vars = {}
+        exec(code, global_vars)
+        strategy = global_vars["strategy"]
+
+  def loop():
+    move = strategy(loop.game)
+    loop.game = make_move(loop.game, move)
+    if loop.move_index % DRAW_EVERY == 0:
+      draw_field(c, loop.game)
+    loop.move_index += 1
+    if not loop.game.is_over:
+      c.after(1000 // FPS, loop)
+    else:
+      print("Total score:", len(loop.game.snake))
+
+  loop.game = get_level(level)
+  loop.move_index = 1
+  draw_field(c, loop.game)
+
+  c.after(1000 // FPS, loop)
+  c.mainloop()
