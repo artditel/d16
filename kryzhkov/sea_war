@@ -1,0 +1,162 @@
+import tkinter
+import random
+# переменные и массивы
+w=249
+h=249
+current = 0
+regim=0
+razmer=[0, 4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+size=25
+povorot=1
+nagatie=1
+rasstanovka_compa=[12,13,14,  80, 98, 7, 41,42, 92,93,94,95, 62, 65, 48,58,68, 35,36, 28,29]
+rasstanovka=[]
+doska=[]
+doska_compa=[]
+corabli=[]
+parol=0
+# холсты
+c = tkinter.Canvas(width=w, height=h)
+c.pack()
+cnv =  tkinter.Canvas(width=w, height=size)
+cnv.pack()
+cn =  tkinter.Canvas(width=w, height=h)
+cn.pack()
+text=cnv.create_text(w//2, size//2, text='put you ships')
+# подготовка
+for i in range(0, w, size):
+    for k in range(0, h, size):
+        c.create_rectangle(i, k, i+size, k+size)
+        cn.create_rectangle(i, k, i+size, k+size)
+for j in range(100):
+    doska.append(j)
+    cn.create_text(j%10*size+size//2, j//10*size+size//2, text=j)
+    doska_compa.append(j)
+    c.create_text(j%10*size+size//2, j//10*size+size//2, text=j)
+# функции
+def put(event):
+    global text
+    global regim
+    global current
+    global povorot
+    global nagatie
+    cn=event.widget
+    event.x, event.y=crd(event.x, event.y)
+    cn.delete(current)
+    if nagatie==11:
+        cnv.delete(text)
+        regim=1
+        text=cnv.create_text(w//2, size//2, text='fire!')
+    if regim==0:
+        if povorot==0:
+            current=cn.create_rectangle(event.x, event.y, event.x+size, event.y+razmer[nagatie]*size, fill='green')
+        else:
+            current=cn.create_rectangle(event.x, event.y, event.x+razmer[nagatie]*size, event.y+size, fill='green')
+def corabl(event):
+    global regim
+    global razmer
+    global current
+    global nagatie
+    parol=0
+    cn=event.widget
+    event.x, event.y=crd(event.x, event.y)
+    kletka=event.y*10//size+event.x//size
+    if regim==0:
+        if povorot==0:
+            for i in range(0, razmer[nagatie]):
+                if corabli.count(kletka+i*10)==0 and doska.count(kletka+i*10)==1:
+                    parol=parol+1
+            if parol==razmer[nagatie]: 
+                for i in range(0, razmer[nagatie]):
+                    rasstanovka.append(kletka+i*10)         
+                cn.create_rectangle(event.x, event.y, event.x+size, event.y+razmer[nagatie]*size, fill='green')
+                nagatie=nagatie+1
+                for i in range(-1, razmer[nagatie]+1):
+                    corabli.append(kletka+10*i)
+                    corabli.append(kletka+10*i+1)
+                    corabli.append(kletka+10*i-1)                   
+        else:
+            for i in range(0, razmer[nagatie]):
+                if corabli.count(kletka+i)==0 and doska.count(kletka+i)==1 and kletka//10 == ((kletka+i)//10):
+                    parol=parol+1
+            if parol==razmer[nagatie]:
+                for i in range(0, razmer[nagatie]):
+                    rasstanovka.append(kletka+i)
+                cn.create_rectangle(event.x, event.y, event.x+razmer[nagatie]*size, event.y+size, fill='green')
+                nagatie=nagatie+1
+                for i in range(-1, razmer[nagatie]+1):
+                    corabli.append(kletka+i)
+                    corabli.append(kletka+i+10)
+                    corabli.append(kletka+i-10)                             
+def povorot(event):
+    global povorot
+    if povorot==1:
+        povorot=0
+    else:
+        povorot=1
+def kletka_popal(x):
+    cn.create_rectangle((x%10)*size, (x//10)*size, (x%10)*size+size, (x//10)*size+size, fill='red')
+def kletka_mimo(x):
+    cn.create_oval((x%10)*size, (x//10)*size, (x%10)*size+size, (x//10)*size+size, fill='white')
+def crd(x,y):
+    x=x-x%size
+    y=y-y%size
+    return(x,y)
+def shot_compa(x):
+    x=1
+    global regim
+    global text
+    if regim==1:
+        st=random.randrange(100)
+        if doska.count(st)==1:
+            if rasstanovka.count(st)==1:
+                kletka_popal(st)
+                shot_compa(1)
+                rasstanovka.remove(st)
+            else:
+                kletka_mimo(st)
+        else:
+            shot_compa(1)
+        doska.remove(st)
+        if len(rasstanovka)==0:
+            regim=3
+            cnv.delete(text)
+            text=cnv.create_text(w//2, size//2, text='you lose')
+def shot(event):
+    global regim
+    global text
+    c=event.widget
+    event.x, event.y=crd(event.x, event.y)
+    kletka=event.y*10//size+event.x//size
+    if doska_compa.count(kletka)==1 and regim==1 :
+        if rasstanovka_compa.count(kletka)==1:
+            if rasstanovka_compa.count(kletka-10)+rasstanovka_compa.count(kletka+10)+rasstanovka_compa.count(kletka-1)+rasstanovka_compa.count(kletka+1) != 0:
+                c.create_rectangle(event.x, event.y, event.x+size, event.y+size, fill='red')
+                rasstanovka_compa.remove(kletka)
+                cnv.delete(text)
+                text=cnv.create_text(w//2, size//2, text='ship hit')
+                shot_compa(1)
+            else:
+                c.create_rectangle(event.x, event.y, event.x+size, event.y+size, fill='red')
+                rasstanovka_compa.remove(kletka)
+                cnv.delete(text)
+                text=cnv.create_text(w//2, size//2, text='ship dead')        
+        else:
+            c.create_oval(event.x, event.y, (event.x+size), (event.y+size), fill='white')
+            cnv.delete(text)
+            text=cnv.create_text(w//2, size//2, text='you miss')
+            shot_compa(1)
+    doska_compa.remove(kletka)
+    if len(rasstanovka_compa)==0:
+        regim=3
+        cnv.delete(text)
+        text=cnv.create_text(w//2, size//2, text='you win')
+def false_shot(event):
+    event.x, event.y=crd(event.x, event.y)
+    c.create_oval(event.x, event.y, (event.x+size), (event.y+size), fill='darkgrey')
+c.bind('<Button-1>', shot)
+c.bind('<Button-3>', false_shot)
+cn.bind('<Button-1>', corabl)
+cn.bind('<Motion>', put)
+cn.bind('<Button-3>', povorot)
+c.mainloop()
